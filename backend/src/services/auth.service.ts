@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt, { SignOptions } from "jsonwebtoken"; 
 import User from "../models/user";
+import RefreshToken from "../models/RefreshToken";
 
 interface RegisterData {
     name: string;
@@ -55,6 +56,21 @@ const generateRefreshToken = (userId: string): string => {
     );
 }
 
+// Save a refresh token to the database
+const saveRefreshToken = async (userId: string, token: string) => {
+    const expiresAt = new Date();
+
+    expiresAt.setDate(
+        expiresAt.getDate() + 30 // يعني 30 يوم من تاريخ الإنشاء
+    );
+
+    await RefreshToken.create({
+        userId,
+        token,
+        expiresAt
+    });
+};
+
 export const registerUser = async (data: RegisterData) => {
     const { name, email, password } = data;
 
@@ -75,6 +91,7 @@ export const registerUser = async (data: RegisterData) => {
     const accessToken = generateAccessToken(user._id.toString());
     const refreshToken = generateRefreshToken(user._id.toString());
 
+    await saveRefreshToken(user._id.toString(), refreshToken);
     return {
         user: {
             id: user._id,
@@ -104,6 +121,8 @@ export const loginUser = async (data: LoginData) => {
     const accessToken = generateAccessToken(user._id.toString());
     const refreshToken = generateRefreshToken(user._id.toString());
 
+    await saveRefreshToken(user._id.toString(), refreshToken);
+
     return {
         user: {
             id: user._id,
@@ -114,3 +133,41 @@ export const loginUser = async (data: LoginData) => {
         refreshToken
     };
 };
+
+export const refreshAccessToken = async (token: string) => {
+    try {
+        const secret = getRefreshSecret();
+
+        const decoded = jwt.verify(token, secret) as { userId: string };
+
+        const storedToken = await RefreshToken.findOne({ userId: decoded.userId, token: token });
+
+        if (!storedToken) {
+            throw new Error('Refresh token is invalid or revoked');
+        }
+
+        const accessToken = generateAccessToken(decoded.userId);
+
+        return {
+            accessToken
+        };
+
+    } catch (error) {
+        throw new Error('Invalid or expired refresh token');
+    }
+}
+
+export const logoutUser = async (token: string) => {
+    try {
+        const deletedToken = await RefreshToken.findOneAndDelete({ token });
+
+        if (!deletedToken) {
+            throw new Error('Refresh token not found');
+        }
+
+        return true;
+
+    } catch (error) {
+        throw new Error('Failed to logout');
+    }
+}
