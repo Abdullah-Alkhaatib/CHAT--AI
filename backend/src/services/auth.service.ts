@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt, { SignOptions } from "jsonwebtoken"; 
-import User from "../models/user";
+import User from "../models/User";
 import RefreshToken from "../models/RefreshToken";
 
 interface RegisterData {
