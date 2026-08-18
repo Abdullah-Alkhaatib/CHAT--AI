@@ -7,7 +7,8 @@ import {
 
 export const sendMessage = async (
     prompt: string,
-    images: File[] = []
+    images: File[] = [],
+    signal?: AbortSignal // <--- أضفنا الـ signal هنا
 ): Promise<ChatResponse> => {
     const formData = new FormData();
 
@@ -19,16 +20,17 @@ export const sendMessage = async (
 
     const response = await api.post<ChatResponse>(
         "/chat",
-        formData
+        formData,
+        {
+            signal, // <--- تمرير الـ signal لـ Axios عشان يقدر يكنسل الطلب
+        }
     );
 
     return response.data;
 };
 
-export const getChat =
-    async (): Promise<ChatHistoryResponse> => {
-        const response =
-            await api.get<ChatHistoryResponse>("/chat");
+export const getChat = async (): Promise<ChatHistoryResponse> => {
+    const response = await api.get<ChatHistoryResponse>("/chat");
 
-        return response.data;
-    };
+    return response.data;
+};

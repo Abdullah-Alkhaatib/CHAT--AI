@@ -14,7 +14,7 @@ interface ChatInputProps {
         prompt: string,
         images: File[]
     ) => void;
-
+    onStop?: () => void; // دالة إيقاف الطلب
     sending: boolean;
 }
 
@@ -25,6 +25,7 @@ interface SelectedImage {
 
 const ChatInput = ({
     onSend,
+    onStop,
     sending,
 }: ChatInputProps) => {
     const [prompt, setPrompt] = useState("");
@@ -33,6 +34,9 @@ const ChatInput = ({
 
     const fileInputRef =
         useRef<HTMLInputElement | null>(null);
+
+    const textareaRef =
+        useRef<HTMLTextAreaElement | null>(null);
 
     useEffect(() => {
         imagesRef.current = images;
@@ -46,10 +50,35 @@ const ChatInput = ({
         };
     }, []);
 
+    // Auto resize textarea
+    useEffect(() => {
+        const textarea = textareaRef.current;
+
+        if (!textarea) {
+            return;
+        }
+
+        textarea.style.height = "auto";
+
+        const maxHeight = 160;
+
+        if (textarea.scrollHeight <= maxHeight) {
+            textarea.style.height = `${textarea.scrollHeight}px`;
+            textarea.style.overflowY = "hidden";
+        } else {
+            textarea.style.height = `${maxHeight}px`;
+            textarea.style.overflowY = "auto";
+        }
+    }, [prompt]);
+
     const handleSubmit = (
         event: FormEvent<HTMLFormElement>
     ) => {
         event.preventDefault();
+
+        if (sending) {
+            return;
+        }
 
         if (
             !prompt.trim() &&
@@ -74,8 +103,6 @@ const ChatInput = ({
     const handleKeyDown = (
         event: React.KeyboardEvent<HTMLTextAreaElement>
     ) => {
-        // Enter = send
-        // Shift + Enter = new line
         if (
             event.key === "Enter" &&
             !event.shiftKey
@@ -232,6 +259,7 @@ const ChatInput = ({
                 </button>
 
                 <textarea
+                    ref={textareaRef}
                     className="chat-input"
                     placeholder="Message AI..."
                     rows={1}
@@ -247,15 +275,27 @@ const ChatInput = ({
                 />
 
                 <button
-                    type="submit"
-                    className="chat-input-send-button"
+                    type={sending ? "button" : "submit"}
+                    className={`chat-input-send-button ${
+                        sending ? "is-sending" : ""
+                    }`}
+                    onClick={(e) => {
+                        if (sending && onStop) {
+                            e.preventDefault();
+                            onStop(); // استدعاء دالة الإيقاف عند النقر
+                        }
+                    }}
                     disabled={
-                        sending ||
+                        !sending &&
                         (!prompt.trim() &&
                             images.length === 0)
                     }
                 >
-                    {sending ? "..." : "↑"}
+                    {sending ? (
+                        <span className="chat-input-stop-icon"></span>
+                    ) : (
+                        "↑"
+                    )}
                 </button>
             </form>
 
@@ -277,4 +317,4 @@ const ChatInput = ({
     );
 };
 
-export default ChatInput;   
+export default ChatInput;

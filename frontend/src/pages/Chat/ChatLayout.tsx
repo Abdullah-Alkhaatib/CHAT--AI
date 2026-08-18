@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import Sidebar from "./Sidebar";
 import ChatHeader from "./ChatHeader";
@@ -92,6 +92,9 @@ const ChatLayout = () => {
     const [activeChatId, setActiveChatId] = useState<string>("saved-chat");
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
+
+    // مرجع للتحكم بإلغاء الطلب (AbortController)
+    const abortControllerRef = useRef<AbortController | null>(null);
 
     const activeChatTitle = useMemo(() => {
         const current = chatSessions.find(
@@ -277,6 +280,10 @@ const ChatLayout = () => {
             return;
         }
 
+        // إنشاء AbortController جديد لكل طلب إرسال
+        const controller = new AbortController();
+        abortControllerRef.current = controller;
+
         setSending(true);
 
         const previewImageUrls = images.map((image) =>
@@ -297,7 +304,8 @@ const ChatLayout = () => {
         syncCurrentSession(nextMessages);
 
         try {
-            const response = await sendMessage(prompt, images);
+            // تمرير الـ signal لخدمة الإرسال لكي يتم إلغاؤها عند الطلب
+            const response = await sendMessage(prompt, images, controller.signal);
             const cloudinaryImageUrls = response.data.imgUrls || [];
 
             if (cloudinaryImageUrls.length > 0) {
@@ -325,9 +333,23 @@ const ChatLayout = () => {
             ];
             setMessages(finalMessages);
             syncCurrentSession(finalMessages);
-        } catch (error) {
-            console.error("Failed to send message:", error);
+        } catch (error: any) {
+            // التحقق مما إذا تم إلغاء الطلب بواسطة المستخدم
+            if (error.name === "CanceledError" || error.name === "AbortError") {
+                console.log("🛑 تم إيقاف البحث بنجاح.");
+            } else {
+                console.error("Failed to send message:", error);
+            }
         } finally {
+            setSending(false);
+            abortControllerRef.current = null;
+        }
+    };
+
+    // دالة إيقاف الطلب عند الضغط على زر الإيقاف (المربع الصغير)
+    const handleStop = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort(); // قطع الاتصال فوراً
             setSending(false);
         }
     };
@@ -353,6 +375,7 @@ const ChatLayout = () => {
 
                 <ChatInput
                     onSend={handleSendMessage}
+                    onStop={handleStop}
                     sending={sending}
                 />
             </main>

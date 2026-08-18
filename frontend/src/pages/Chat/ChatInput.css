@@ -6,6 +6,7 @@
 }
 
 .chat-input-preview-list {
+    width: 100%;
     max-width: 900px;
     margin: 0 auto 12px;
 
@@ -63,6 +64,10 @@
     z-index: 1;
 }
 
+/* =========================
+   CHAT INPUT
+========================= */
+
 .chat-input-container {
     width: 100%;
     max-width: 900px;
@@ -88,14 +93,17 @@
 .chat-input {
     flex: 1;
 
+    width: 100%;
+    min-width: 0;
+
     min-height: 38px;
     max-height: 160px;
 
-    padding: 9px 4px;
+    padding: 9px 8px;
 
     resize: none;
 
-    /* Hide scrollbar */
+    overflow-x: hidden;
     overflow-y: hidden;
 
     border: none;
@@ -109,11 +117,36 @@
     line-height: 20px;
 
     box-sizing: border-box;
+
+    scrollbar-width: thin;
+    scrollbar-color: #666666 transparent;
 }
 
 .chat-input::placeholder {
     color: #888888;
 }
+
+/* Chrome / Edge scrollbar */
+.chat-input::-webkit-scrollbar {
+    width: 7px;
+}
+
+.chat-input::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-input::-webkit-scrollbar-thumb {
+    background-color: #666666;
+    border-radius: 10px;
+}
+
+.chat-input::-webkit-scrollbar-thumb:hover {
+    background-color: #888888;
+}
+
+/* =========================
+   BUTTONS
+========================= */
 
 .chat-input-attach-button,
 .chat-input-send-button {
@@ -163,7 +196,40 @@
     opacity: 0.5;
 }
 
+/* =========================
+   STOP BUTTON (أيقونة وحالة الإيقاف)
+========================= */
+
+.chat-input-send-button.is-sending {
+    background-color: #ffffff !important;
+    cursor: pointer !important;
+    opacity: 1 !important;
+}
+
+.chat-input-send-button.is-sending:hover {
+    background-color: #dcdcdc !important;
+}
+
+/* شكل مربع الإيقاف الصغير داخل الزر */
+.chat-input-stop-icon {
+    width: 12px;
+    height: 12px;
+    background-color: #171717;
+    border-radius: 2px;
+    display: inline-block;
+    transition: transform 0.1s ease;
+}
+
+.chat-input-send-button.is-sending:active .chat-input-stop-icon {
+    transform: scale(0.85);
+}
+
+/* =========================
+   INFO
+========================= */
+
 .chat-input-selected-images {
+    width: 100%;
     max-width: 900px;
 
     margin: 10px auto 0;
@@ -173,6 +239,7 @@
 }
 
 .chat-input-disclaimer {
+    width: 100%;
     max-width: 900px;
 
     margin: 8px auto 0;
