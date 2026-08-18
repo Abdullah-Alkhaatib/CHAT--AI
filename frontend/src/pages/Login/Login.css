@@ -1,0 +1,166 @@
+.login-page {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background-color: #212121;
+
+    box-sizing: border-box;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+
+    padding: 32px;
+
+    border: 1px solid #333333;
+    border-radius: 16px;
+
+    background-color: #171717;
+
+    box-sizing: border-box;
+}
+
+.login-header {
+    margin-bottom: 28px;
+
+    text-align: center;
+}
+
+.login-title {
+    margin: 0 0 8px;
+
+    color: #ffffff;
+
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.login-subtitle {
+    margin: 0;
+
+    color: #8e8e8e;
+
+    font-size: 14px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.login-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.login-label {
+    color: #d1d1d1;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.login-input {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+
+    outline: none;
+
+    background-color: #242424;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    box-sizing: border-box;
+}
+
+.login-input:focus {
+    border-color: #666666;
+}
+
+.login-input::placeholder {
+    color: #777777;
+}
+
+.login-error {
+    margin: -4px 0 0;
+
+    color: #ef4444;
+
+    font-size: 13px;
+}
+
+.login-submit-button {
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #ffffff;
+    color: #171717;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background-color 0.2s ease;
+}
+
+.login-submit-button:hover {
+    background-color: #dddddd;
+}
+
+.login-submit-button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+.login-footer {
+    margin-top: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+}
+
+.login-footer-text {
+    color: #888888;
+
+    font-size: 13px;
+}
+
+.login-register-button {
+    padding: 0;
+
+    border: none;
+
+    background-color: transparent;
+    color: #ffffff;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.login-register-button:hover {
+    text-decoration: underline;
+}

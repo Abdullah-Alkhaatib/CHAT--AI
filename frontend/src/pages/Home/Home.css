@@ -1,0 +1,79 @@
+.home-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0b1020 0%, #111827 50%, #1f2937 100%);
+    color: #f9fafb;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.home-card {
+    width: min(100%, 520px);
+    background: rgba(17, 24, 39, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 24px;
+    padding: 40px 32px;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.45);
+    text-align: center;
+}
+
+.home-badge {
+    margin: 0 0 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #93c5fd;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.home-card h1 {
+    margin: 0;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    line-height: 1;
+}
+
+.home-text {
+    margin: 18px auto 0;
+    max-width: 420px;
+    color: #d1d5db;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.home-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+.home-primary-button,
+.home-secondary-button {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.home-primary-button:hover,
+.home-secondary-button:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+.home-primary-button {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.home-secondary-button {
+    background: rgba(148, 163, 184, 0.12);
+    color: #e5e7eb;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}

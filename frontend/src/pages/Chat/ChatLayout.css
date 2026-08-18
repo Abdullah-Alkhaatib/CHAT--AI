@@ -1,0 +1,22 @@
+.chat-layout {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+
+    background-color: #212121;
+    color: #ffffff;
+
+    overflow: hidden;
+}
+
+.chat-main {
+    flex: 1;
+    min-width: 0;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
