@@ -23,7 +23,25 @@ export const chat = async (req: AuthRequest, res: Response) => {
             });
         }
 
-        // Upload all images to Cloudinary
+        // Find existing chat
+        let chat = await Chat.findOne({
+            userId: req.user.userId,
+        });
+
+        if (!chat) {
+            chat = new Chat({
+                userId: req.user.userId,
+                messages: [],
+            });
+        }
+
+        // Get previous messages BEFORE adding the new message
+        const history = chat.messages.map((message) => ({
+            role: message.role,
+            content: message.content,
+        }));
+
+        // Upload images to Cloudinary
         const imgUrls: string[] = [];
 
         for (const image of images) {
@@ -35,22 +53,12 @@ export const chat = async (req: AuthRequest, res: Response) => {
             imgUrls.push(uploadResult.url);
         }
 
-        // Send all original images to Gemini
+        // Send previous conversation + current message to Gemini
         const response = await generateAllResponse(
             prompt,
-            images
+            images,
+            history
         );
-
-        let chat = await Chat.findOne({
-            userId: req.user.userId,
-        });
-
-        if (!chat) {
-            chat = new Chat({
-                userId: req.user.userId,
-                messages: [],
-            });
-        }
 
         // Save user message
         chat.messages.push({

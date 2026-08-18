@@ -1,14 +1,36 @@
 import gemini from "../config/gemini";
 
+interface ChatHistoryMessage {
+    role: "user" | "assistant";
+    content: string;
+}
+
+interface GeminiMessage {
+    role: "user" | "model";
+    parts: {
+        text: string;
+    }[];
+}
+
 export const generateAllResponse = async (
     prompt: string,
     images?: {
         buffer: Buffer;
         mimetype: string;
-    }[]
+    }[],
+    history: ChatHistoryMessage[] = []
 ): Promise<string> => {
     try {
-        const parts: any[] = [
+        const contents: GeminiMessage[] = history.map((message) => ({
+            role: message.role === "assistant" ? "model" : "user",
+            parts: [
+                {
+                    text: message.content,
+                },
+            ],
+        }));
+
+        const currentParts: any[] = [
             {
                 text: prompt,
             },
@@ -16,7 +38,7 @@ export const generateAllResponse = async (
 
         if (images && images.length > 0) {
             for (const image of images) {
-                parts.push({
+                currentParts.push({
                     inlineData: {
                         mimeType: image.mimetype,
                         data: image.buffer.toString("base64"),
@@ -25,14 +47,14 @@ export const generateAllResponse = async (
             }
         }
 
+        contents.push({
+            role: "user",
+            parts: currentParts,
+        });
+
         const response = await gemini.models.generateContent({
             model: "gemini-3.6-flash",
-            contents: [
-                {
-                    role: "user",
-                    parts,
-                },
-            ],
+            contents,
         });
 
         return response.text ?? "No response from Gemini API";
