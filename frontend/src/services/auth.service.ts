@@ -55,16 +55,20 @@ export const refreshToken = async (
 };
 
 // ==============================
-// Logout
+// Logout (تمت إضافة Try-Catch لضمان الأمان)
 // ==============================
 
 export const logoutUser = async (
     refreshToken: string
 ): Promise<void> => {
-    await api.post(
-        "/auth/logout",
-        {
-            refreshToken,
-        }
-    );
+    try {
+        await api.post(
+            "/auth/logout",
+            {
+                refreshToken,
+            }
+        );
+    } catch (error) {
+        console.error("Logout API failed, but continuing local cleanup:", error);
+    }
 };
