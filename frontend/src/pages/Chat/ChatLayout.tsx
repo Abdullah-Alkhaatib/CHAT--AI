@@ -10,7 +10,7 @@ import { ChatMessage } from "../../types/chat.types";
 import "./ChatLayout.css";
 
 interface ChatSession {
-    id: string
+    id: string;
     title?: string;
     messages: ChatMessage[];
     updatedAt?: string;
@@ -36,6 +36,9 @@ const ChatLayout = () => {
     const [activeChatId, setActiveChatId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
+    
+    // State للتحكم بفتح وإغلاق السايدبار
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -44,18 +47,16 @@ const ChatLayout = () => {
         const fetchSessions = async () => {
             setLoading(true);
             try {
-                const response = await getChat(); // يجلب كل الشاتات الخاصة باليوزر
+                const response = await getChat();
                 const sessions = response.data || [];
                 
-                // تنسيق الشاتات لعرضها بالقائمة الجانبية
                 const formattedSessions = sessions.map((session: any) => ({
-    id: session._id, // خلينا الـ id هو الأساس
-    title: getChatTitle(session.messages || []),
-    messages: session.messages || [],
-}));
-setChatSessions(formattedSessions);
+                    id: session._id,
+                    title: getChatTitle(session.messages || []),
+                    messages: session.messages || [],
+                }));
+                setChatSessions(formattedSessions);
 
-                // لو في شاتات، بنختار أول واحد افتراضياً، أو بنتركها لشات جديد
                 if (formattedSessions.length > 0) {
                     setActiveChatId(formattedSessions[0].id);
                     setMessages(formattedSessions[0].messages);
@@ -77,10 +78,10 @@ setChatSessions(formattedSessions);
         return current?.title || "New Chat";
     }, [activeChatId, chatSessions]);
 
-    // زر New Chat (ينظف الشاشة ويخلي الشات القادم جديد كلياً)
+    // زر New Chat
     const handleNewChat = () => {
         setMessages([]);
-        setActiveChatId(null); // null يعني لسه ما انحفظ بالداتابيس لحين إرسال أول رسالة
+        setActiveChatId(null);
     };
 
     // اختيار شات قديم من القائمة الجانبية
@@ -128,7 +129,6 @@ setChatSessions(formattedSessions);
         setMessages(nextMessages);
 
         try {
-            // نبعث الـ activeChatId الحالي (لو كان null الباك إند هيكريت شات جديد)
             const response = await sendMessage(prompt, images, activeChatId || undefined, controller.signal);
             const responseData = response.data;
             const newChatId = responseData.chatId;
@@ -146,25 +146,24 @@ setChatSessions(formattedSessions);
 
             const finalMessages = [...messages, userMessage, assistantMessage];
             setMessages(finalMessages);
-            setActiveChatId(newChatId); // تثبيت الـ chatId الجديد أو الحالي
+            setActiveChatId(newChatId);
 
-            // تحديث القائمة الجانبية (Sidebar) مباشرة
             setChatSessions((prevSessions) => {
-    const existingIndex = prevSessions.findIndex((s) => s.id === newChatId);
-    const updatedSession: ChatSession = {
-        id: newChatId,
-        title: getChatTitle(finalMessages),
-        messages: finalMessages,
-    };
+                const existingIndex = prevSessions.findIndex((s) => s.id === newChatId);
+                const updatedSession: ChatSession = {
+                    id: newChatId,
+                    title: getChatTitle(finalMessages),
+                    messages: finalMessages,
+                };
 
-    if (existingIndex >= 0) {
-        const updated = [...prevSessions];
-        updated[existingIndex] = updatedSession;
-        return updated;
-    } else {
-        return [updatedSession, ...prevSessions];
-    }
-});
+                if (existingIndex >= 0) {
+                    const updated = [...prevSessions];
+                    updated[existingIndex] = updatedSession;
+                    return updated;
+                } else {
+                    return [updatedSession, ...prevSessions];
+                }
+            });
 
         } catch (error: any) {
             if (error.name === "CanceledError" || error.name === "AbortError") {
@@ -185,7 +184,6 @@ setChatSessions(formattedSessions);
         }
     };
 
-    // تحويل الـ chatSessions لتتوافق مع الـ Sidebar props
     const formattedSidebarSessions = chatSessions.map((session: any) => ({
         id: session.id,
         title: session.title,
@@ -198,12 +196,28 @@ setChatSessions(formattedSessions);
                 user={user}
                 chatSessions={formattedSidebarSessions}
                 activeChatId={activeChatId || ""}
+                isOpen={isSidebarOpen}
+                onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
                 onSelectChat={handleSelectChat}
                 onNewChat={handleNewChat}
                 onLogout={handleLogout}
             />
 
             <main className="chat-main">
+                {/* زر فتح السايدبار يظهر فقط عندما يكون السايدبار مغلقاً */}
+                {!isSidebarOpen && (
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="sidebar-open-trigger-btn"
+                        title="Open sidebar"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <path d="M9 3v18" />
+                        </svg>
+                    </button>
+                )}
+
                 <ChatHeader title={activeChatTitle} />
                 <MessageList messages={messages} loading={loading} />
                 <ChatInput
