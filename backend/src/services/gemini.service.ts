@@ -53,7 +53,7 @@ export const generateAllResponse = async (
         });
 
         const response = await gemini.models.generateContent({
-            model: "gemini-3.6-flash",
+            model: "gemini-3.5-flash-lite",
             contents,
         });
 
