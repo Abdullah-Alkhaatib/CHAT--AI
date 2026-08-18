@@ -71,6 +71,27 @@ const ChatInput = ({
         }
     };
 
+    const handleKeyDown = (
+        event: React.KeyboardEvent<HTMLTextAreaElement>
+    ) => {
+        // Enter = send
+        // Shift + Enter = new line
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+            event.preventDefault();
+
+            if (
+                !sending &&
+                (prompt.trim() ||
+                    images.length > 0)
+            ) {
+                event.currentTarget.form?.requestSubmit();
+            }
+        }
+    };
+
     const handleImageChange = (
         event: ChangeEvent<HTMLInputElement>
     ) => {
@@ -83,10 +104,12 @@ const ChatInput = ({
             return;
         }
 
-        const selectedImages = selectedFiles.map((file) => ({
-            file,
-            url: URL.createObjectURL(file),
-        }));
+        const selectedImages = selectedFiles.map(
+            (file) => ({
+                file,
+                url: URL.createObjectURL(file),
+            })
+        );
 
         setImages((previousImages) => [
             ...previousImages,
@@ -102,39 +125,50 @@ const ChatInput = ({
         const imageFiles = Array.from(
             event.clipboardData.items
         )
-            .filter((item) => item.type.startsWith("image/"))
+            .filter((item) =>
+                item.type.startsWith("image/")
+            )
             .map((item) => item.getAsFile())
-            .filter((file): file is File => file !== null);
+            .filter(
+                (file): file is File =>
+                    file !== null
+            );
 
         if (imageFiles.length === 0) {
             return;
         }
 
-        const pastedImages = imageFiles.map((file) => ({
-            file,
-            url: URL.createObjectURL(file),
-        }));
+        const pastedImages = imageFiles.map(
+            (file) => ({
+                file,
+                url: URL.createObjectURL(file),
+            })
+        );
 
         setImages((previousImages) => [
             ...previousImages,
             ...pastedImages,
         ]);
 
-        // Prevent unexpected characters from being inserted when pasting image blobs.
         event.preventDefault();
     };
 
-    const handleRemoveImage = (imageIndex: number) => {
+    const handleRemoveImage = (
+        imageIndex: number
+    ) => {
         setImages((previousImages) => {
             const imageToRemove =
                 previousImages[imageIndex];
 
             if (imageToRemove) {
-                URL.revokeObjectURL(imageToRemove.url);
+                URL.revokeObjectURL(
+                    imageToRemove.url
+                );
             }
 
             return previousImages.filter(
-                (_, index) => index !== imageIndex
+                (_, index) =>
+                    index !== imageIndex
             );
         });
     };
@@ -143,29 +177,33 @@ const ChatInput = ({
         <div className="chat-input-wrapper">
             {images.length > 0 && (
                 <div className="chat-input-preview-list">
-                    {images.map((image, index) => (
-                        <div
-                            key={`${image.file.name}-${index}`}
-                            className="chat-input-preview-item"
-                        >
-                            <button
-                                type="button"
-                                className="chat-input-preview-remove"
-                                aria-label={`Remove ${image.file.name}`}
-                                onClick={() =>
-                                    handleRemoveImage(index)
-                                }
+                    {images.map(
+                        (image, index) => (
+                            <div
+                                key={`${image.file.name}-${index}`}
+                                className="chat-input-preview-item"
                             >
-                                ×
-                            </button>
+                                <button
+                                    type="button"
+                                    className="chat-input-preview-remove"
+                                    aria-label={`Remove ${image.file.name}`}
+                                    onClick={() =>
+                                        handleRemoveImage(
+                                            index
+                                        )
+                                    }
+                                >
+                                    ×
+                                </button>
 
-                            <img
-                                className="chat-input-preview-image"
-                                src={image.url}
-                                alt={image.file.name}
-                            />
-                        </div>
-                    ))}
+                                <img
+                                    className="chat-input-preview-image"
+                                    src={image.url}
+                                    alt={image.file.name}
+                                />
+                            </div>
+                        )
+                    )}
                 </div>
             )}
 
@@ -199,8 +237,11 @@ const ChatInput = ({
                     rows={1}
                     value={prompt}
                     onChange={(event) =>
-                        setPrompt(event.target.value)
+                        setPrompt(
+                            event.target.value
+                        )
                     }
+                    onKeyDown={handleKeyDown}
                     onPaste={handlePasteImages}
                     disabled={sending}
                 />
@@ -221,15 +262,19 @@ const ChatInput = ({
             {images.length > 0 && (
                 <p className="chat-input-selected-images">
                     {images.length} image
-                    {images.length > 1 ? "s" : ""} selected
+                    {images.length > 1
+                        ? "s"
+                        : ""}{" "}
+                    selected
                 </p>
             )}
 
             <p className="chat-input-disclaimer">
-                AI can make mistakes. Check important information.
+                AI can make mistakes. Check
+                important information.
             </p>
         </div>
     );
 };
 
-export default ChatInput;
+export default ChatInput;   
