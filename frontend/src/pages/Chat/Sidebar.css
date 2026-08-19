@@ -185,3 +185,69 @@
 .sidebar-logout-button:hover { 
     background-color: rgba(239, 68, 68, 0.12); 
 }
+
+.sidebar-chat-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-radius: 7px;
+}
+
+.sidebar-chat-row:hover {
+    background-color: #242424;
+}
+
+.sidebar-chat-item {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    text-align: left;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-chat-item:hover {
+    background-color: transparent;
+}
+
+.sidebar-chat-item-active {
+    background-color: #2a2a2a;
+}
+
+.sidebar-delete-chat-button {
+    width: 34px;
+    height: 34px;
+    margin-right: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+
+    color: #777777;
+    cursor: pointer;
+
+    opacity: 0;
+    transition:
+        opacity 0.2s ease,
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.sidebar-chat-row .sidebar-delete-chat-button {
+    opacity: 1;
+}
+
+.sidebar-delete-chat-button:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ff6b6b;
+}

@@ -34,3 +34,26 @@ export const uploadImageBuffer = (
         stream.end(buffer);
     });
 };
+
+export const deleteImage = (publicId: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.destroy(
+            publicId,
+            {
+                resource_type: "image",
+            },
+            (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+
+                console.log(
+                    `Cloudinary delete: ${publicId}`,
+                    result?.result
+                );
+
+                resolve();
+            }
+        );
+    });
+};

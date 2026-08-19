@@ -1,9 +1,14 @@
 export type MessageRole = "user" | "assistant";
 
+export interface ChatImage {
+    url: string;
+    publicId?: string;
+}
+
 export interface ChatMessage {
     role: MessageRole;
     content: string;
-    imgUrls?: string[];
+    images?: ChatImage[];
 }
 
 export interface ChatResponse {
@@ -13,7 +18,7 @@ export interface ChatResponse {
     data: {
         response: string;
         chatId: string;
-        imgUrls?: string[];
+        images?: ChatImage[];
     };
 }
 

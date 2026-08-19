@@ -1,9 +1,14 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+export interface IChatImage {
+    url: string;
+    publicId: string;
+}
+
 export interface IChatMessage {
     role: "user" | "assistant";
     content: string;
-    imgUrls?: string[];
+    images?: IChatImage[];
 }
 
 export interface IChat extends Document {
@@ -13,25 +18,43 @@ export interface IChat extends Document {
     updatedAt: Date;
 }
 
-const chatMessageSchema: Schema<IChatMessage> = new Schema({
-    role: {
-        type: String,
-        enum: ["user", "assistant"],
-        required: true,
+const chatImageSchema: Schema<IChatImage> = new Schema(
+    {
+        url: {
+            type: String,
+            required: true,
+        },
+        publicId: {
+            type: String,
+            required: true,
+        },
     },
-    content: {
-        type: String,
-        required: true,
-        trim: true,
+    {
+        _id: false,
+    }
+);
+
+const chatMessageSchema: Schema<IChatMessage> = new Schema(
+    {
+        role: {
+            type: String,
+            enum: ["user", "assistant"],
+            required: true,
+        },
+        content: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        images: {
+            type: [chatImageSchema],
+            default: undefined,
+        },
     },
-    imgUrls: {
-        type: [String],
-        default: undefined,
-    },
-},
-{
-    _id: false,
-});
+    {
+        _id: false,
+    }
+);
 
 const chatSchema: Schema<IChat> = new Schema({
     userId: {

@@ -2,7 +2,7 @@ import { Response } from "express";
 import { AuthRequest } from "../types/auth.types";
 import { generateAllResponse } from "../services/gemini.service";
 import Chat from "../models/Chat";
-import { uploadImageBuffer } from "../utils/uploadImage";
+import { uploadImageBuffer, deleteImage } from "../utils/uploadImage";
 
 export const chat = async (req: AuthRequest, res: Response) => {
     try {
@@ -48,14 +48,22 @@ export const chat = async (req: AuthRequest, res: Response) => {
         }));
 
         // رفع الصور لـ Cloudinary
-        const imgUrls: string[] = [];
-        for (const image of images) {
-            const uploadResult = await uploadImageBuffer(
-                image.buffer,
-                "chat-ai"
-            );
-            imgUrls.push(uploadResult.url);
-        }
+        const uploadedImages: {
+    url: string;
+    publicId: string;
+}[] = [];
+
+for (const image of images) {
+    const uploadResult = await uploadImageBuffer(
+        image.buffer,
+        "chat-ai"
+    );
+
+    uploadedImages.push({
+        url: uploadResult.url,
+        publicId: uploadResult.publicId,
+    });
+}
 
         // توليد الرد من Gemini
         const response = await generateAllResponse(
@@ -66,10 +74,12 @@ export const chat = async (req: AuthRequest, res: Response) => {
 
         // حفظ رسالة المستخدم
         chatDoc.messages.push({
-            role: "user",
-            content: prompt,
-            ...(imgUrls.length > 0 && { imgUrls }),
-        });
+    role: "user",
+    content: prompt,
+    ...(uploadedImages.length > 0 && {
+        images: uploadedImages,
+    }),
+});
 
         // حفظ رد الـ AI
         chatDoc.messages.push({
@@ -82,12 +92,14 @@ export const chat = async (req: AuthRequest, res: Response) => {
         return res.status(200).json({
             success: true,
             message: "Response generated successfully",
-            data: {
-                response,
-                chatId: chatDoc._id, // بنرجع الـ chatId الجديد أو الحالي للفرت إند
-                messages: chatDoc.messages,
-                ...(imgUrls.length > 0 && { imgUrls }),
-            },
+             data: {
+        response,
+        chatId: chatDoc._id,
+        messages: chatDoc.messages,
+        ...(uploadedImages.length > 0 && {
+            images: uploadedImages,
+        }),
+    },
         });
 
     } catch (error) {
@@ -131,6 +143,74 @@ export const getChat = async (req: AuthRequest, res: Response) => {
         });
 
     } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: (error as Error).message,
+        });
+    }
+};
+
+
+export const deleteChat = async (
+    req: AuthRequest,
+    res: Response
+) => {
+    try {
+        if (!req.user || !req.user.userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authenticated",
+            });
+        }
+
+        const { chatId } = req.params;
+
+        if (!chatId || chatId.length !== 24) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid chat ID",
+            });
+        }
+
+        // مهم جدًا:
+        // نتأكد أن الشات ملك لهذا المستخدم
+        const chatDoc = await Chat.findOne({
+            _id: chatId,
+            userId: req.user.userId,
+        });
+
+        if (!chatDoc) {
+            return res.status(404).json({
+                success: false,
+                message: "Chat not found",
+            });
+        }
+
+        // نجمع كل صور الشات
+        const images = chatDoc.messages.flatMap(
+            (message) => message.images || []
+        );
+
+        // حذف الصور من Cloudinary
+        await Promise.all(
+            images.map((image) =>
+                deleteImage(image.publicId)
+            )
+        );
+
+        // حذف الشات من MongoDB
+        await Chat.deleteOne({
+            _id: chatDoc._id,
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Chat and images deleted successfully",
+        });
+
+    } catch (error) {
+        console.error("Delete chat error:", error);
+
         return res.status(500).json({
             success: false,
             message: (error as Error).message,
