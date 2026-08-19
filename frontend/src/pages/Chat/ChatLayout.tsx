@@ -196,14 +196,6 @@ const ChatLayout = () => {
             return;
         }
 
-        const confirmed = window.confirm(
-            `Delete "${chatToDelete.title}"?\n\nThis will permanently delete the chat and its images.`
-        );
-
-        if (!confirmed) {
-            return;
-        }
-
         try {
             // =================================================
             // DELETE FROM BACKEND
