@@ -57,8 +57,8 @@
     font-size: 15px;
     line-height: 1.75;
 
-    direction: rtl;
-    text-align: right;
+    text-align: start;
+
 }
 
 /* =========================================================
@@ -96,8 +96,7 @@
 .markdown-list {
     margin: 10px 0 18px;
 
-    padding-right: 24px;
-    padding-left: 0;
+    padding-inline-start: 24px;
 }
 
 .markdown-list-item {
@@ -506,7 +505,7 @@
     ------------------------- */
 
     .markdown-list {
-        padding-right: 20px;
+        padding-inline-start: 20px;
 
         margin-bottom: 14px;
     }

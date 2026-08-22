@@ -192,7 +192,7 @@ const Message = ({
                         )}
 
                     {message.content && (
-                        <div className="assistant-content">
+                        <div className="assistant-content" dir="auto">
                             <ReactMarkdown
                                 remarkPlugins={[
                                     remarkGfm,
