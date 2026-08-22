@@ -1,55 +1,87 @@
+/* =========================================================
+   MESSAGE
+========================================================= */
+
 .message {
-    width: fit-content;
-    max-width: min(100%, 760px);
-    padding: 12px 14px;
-    margin-bottom: 14px;
-    border-radius: 14px;
+    width: 100%;
+    max-width: 100%;
+
+    margin-bottom: 28px;
+
     box-sizing: border-box;
-    border: 1px solid transparent;
-    transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
+
+/* =========================================================
+   USER MESSAGE
+========================================================= */
 
 .message-user {
-    margin-left: auto;
-    background: #2b2f36;
-    border-color: #3b4450;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
+
+.user-content {
+    width: fit-content;
+    max-width: min(760px, 85%);
+
+    padding: 12px 16px;
+
+    background: #2b2f36;
+
+    border: 1px solid #3b4450;
+    border-radius: 18px;
+
+    color: #eeeeee;
+}
+
+/* =========================================================
+   ASSISTANT MESSAGE
+========================================================= */
 
 .message-assistant {
-    margin-right: auto;
-    background: #242424;
-    border-color: #343434;
+    width: 100%;
+
+    background: transparent;
+    border: none;
+
+    margin-right: 0;
+    padding: 0;
 }
 
-/* =========================================
-   MESSAGE CONTENT
-========================================= */
+.assistant-content {
+    width: 100%;
 
-.message-content {
-    color: #d1d1d1;
+    color: #e5e5e5;
+
     font-size: 15px;
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.75;
+
     direction: rtl;
     text-align: right;
-    word-break: break-word; /* منع الكلمات الطويلة جداً من كسر التنسيق */
 }
 
+/* =========================================================
+   PARAGRAPHS
+========================================================= */
+
 .markdown-paragraph {
-    margin: 0 0 12px;
+    margin: 0 0 18px;
 }
 
 .markdown-paragraph:last-child {
     margin-bottom: 0;
 }
 
-/* =========================================
+/* =========================================================
    HEADINGS
-========================================= */
+========================================================= */
 
 .markdown-heading {
     color: #f1f1f1;
-    margin: 18px 0 10px;
+
+    margin: 24px 0 12px;
+
     line-height: 1.4;
 }
 
@@ -57,45 +89,36 @@
     margin-top: 0;
 }
 
-.markdown-heading h1 {
-    font-size: 24px;
-}
-
-.markdown-heading h2 {
-    font-size: 21px;
-}
-
-.markdown-heading h3 {
-    font-size: 18px;
-}
-
-/* =========================================
+/* =========================================================
    LISTS
-========================================= */
+========================================================= */
 
 .markdown-list {
-    margin: 8px 0 14px;
+    margin: 10px 0 18px;
+
     padding-right: 24px;
     padding-left: 0;
 }
 
 .markdown-list-item {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
-/* =========================================
+/* =========================================================
    INLINE CODE
-========================================= */
+========================================================= */
 
-.inline-code {
+.assistant-content code:not(.code-block code) {
     direction: ltr;
-    unicode-bidi: plaintext;
 
-    background: #1a1a1a;
-    border: 1px solid #3a3a3a;
-    color: #e7e7e7;
+    background: #2a2a2a;
+
+    border: 1px solid #3b3b3b;
+
+    color: #f0f0f0;
 
     padding: 2px 6px;
+
     border-radius: 5px;
 
     font-family:
@@ -105,69 +128,83 @@
         monospace;
 
     font-size: 13px;
-    word-break: break-all; /* لمنع الأكواد القصيرة المتصلة من الخروج */
 }
 
-/* =========================================
+/* =========================================================
    CODE BLOCK
-========================================= */
+========================================================= */
 
 .code-block {
     width: 100%;
-    max-width: 100%; /* ضمان عدم خروج الحاوية عن شاشة الموبايل */
-    margin: 14px 0;
 
-    direction: ltr;
+    margin: 20px 0 24px;
 
-    background: #111111;
-    border: 1px solid #3a3a3a;
-    border-radius: 10px;
+    padding: 0;
+
+    background: #0f0f0f;
+
+    border: 1px solid #343434;
+
+    border-radius: 12px;
 
     overflow: hidden;
 
+    direction: ltr;
+
     text-align: left;
+
+    box-sizing: border-box;
 }
 
-/* =========================================
+/* =========================================================
    CODE HEADER
-========================================= */
+========================================================= */
 
 .code-header {
+    height: 46px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
-    min-height: 38px;
+    padding: 0 12px;
 
-    padding: 0 10px;
+    background: #181818;
 
-    background: #1b1b1b;
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid #343434;
+
+    box-sizing: border-box;
 }
 
 .code-language {
-    color: #a9a9a9;
+    color: #bdbdbd;
 
     font-family:
         "Consolas",
         "Monaco",
-        "Courier New",
         monospace;
 
     font-size: 12px;
+
+    font-weight: 600;
 }
 
 .code-copy-button {
-    border: 1px solid #444444;
-    border-radius: 6px;
+    border: 1px solid #4a4a4a;
 
-    background: #262626;
-    color: #dddddd;
+    border-radius: 7px;
+
+    background: #252525;
+
+    color: #e7e7e7;
 
     font-size: 12px;
+
     font-weight: 600;
 
-    padding: 5px 9px;
+    padding: 6px 11px;
 
     cursor: pointer;
 
@@ -178,26 +215,30 @@
 
 .code-copy-button:hover {
     background: #333333;
-    border-color: #5a5a5a;
+
+    border-color: #666666;
 }
 
-/* =========================================
-   CODE
-========================================= */
+/* =========================================================
+   CODE CONTENT
+========================================================= */
 
 .code-pre {
-    margin: 0;
-    padding: 16px;
+    width: 100%;
 
-    overflow-x: auto; /* يسمح بالتمرير الأفقي للأكواد الطويلة على الموبايل دون كسر التصميم */
+    margin: 0;
+
+    padding: 18px 20px;
+
+    box-sizing: border-box;
+
+    overflow-x: auto;
+
+    background: #0f0f0f;
 
     direction: ltr;
-    text-align: left;
 
-    background: #111111;
-    
-    /* تحسين السكرولبار داخل الأكواد للشاشات الصغيرة */
-    -webkit-overflow-scrolling: touch; 
+    text-align: left;
 }
 
 .code-pre code {
@@ -212,90 +253,67 @@
         monospace;
 
     font-size: 13px;
-    line-height: 1.6;
+
+    line-height: 1.65;
 
     white-space: pre;
+
+    direction: ltr;
+
+    text-align: left;
 }
 
-/* =========================================
-   BLOCKQUOTE
-========================================= */
+/* =========================================================
+   MESSAGE ACTIONS
+========================================================= */
 
-.markdown-blockquote {
-    margin: 12px 0;
-    padding: 8px 14px;
-
-    border-right: 3px solid #555555;
-
-    color: #bdbdbd;
-    background: #1d1d1d;
-
-    border-radius: 6px;
-}
-
-/* =========================================
-   MESSAGE TOOLBAR
-========================================= */
-
-.message-toolbar {
+.message-actions {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 8px;
+
+    justify-content: flex-start;
+
+    margin-top: 8px;
 }
 
 .message-copy-button {
-    border: 1px solid #4a4a4a;
-    border-radius: 8px;
+    border: none;
 
-    background: #2e2e2e;
-    color: #e6e6e6;
+    background: transparent;
+
+    color: #8f8f8f;
 
     font-size: 12px;
-    font-weight: 600;
 
-    padding: 5px 10px;
+    padding: 5px 8px;
+
+    border-radius: 6px;
 
     cursor: pointer;
 
     transition:
         background-color 0.2s ease,
-        border-color 0.2s ease;
+        color 0.2s ease;
 }
 
 .message-copy-button:hover {
-    background: #3b3b3b;
-    border-color: #5e5e5e;
+    background: #2a2a2a;
+
+    color: #dddddd;
 }
 
-/* =========================================
-    NEW MESSAGE
-========================================= */
-
-.message-new {
-    border-color: #67d38f;
-
-    box-shadow:
-        0 0 0 1px rgba(103, 211, 143, 0.25),
-        0 8px 24px rgba(16, 185, 129, 0.18);
-
-    animation: message-pop 0.35s ease;
-}
-
-@keyframes message-pop {
-    0% {
-        transform: translateY(10px);
-        opacity: 0.4;
-    }
-
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* =========================================
+/* =========================================================
    IMAGES
-========================================= */
+========================================================= */
+
+.message-images {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+}
 
 .message-image {
     display: block;
@@ -305,51 +323,260 @@
 
     object-fit: cover;
 
-    border-radius: 12px;
+    border-radius: 10px;
 
     cursor: zoom-in;
 
     border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.message-images {
-    display: flex;
-    flex-wrap: wrap;
+/* =========================================================
+   NEW MESSAGE
+========================================================= */
 
-    gap: 8px;
-
-    margin-bottom: 8px;
+.message-new {
+    animation: message-pop 0.35s ease;
 }
 
-/* =========================================
-   RESPONSIVE (التجاوب مع الشاشات الصغيرة)
-========================================= */
-@media screen and (max-width: 600px) {
+@keyframes message-pop {
+    0% {
+        transform: translateY(8px);
+
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: translateY(0);
+
+        opacity: 1;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
     .message {
-        max-width: 100%; /* اجعل الرسالة تأخذ عرض الشاشة بالكامل في الهواتف المجاورة */
-        padding: 10px 12px; /* تقليل الهوامش الداخلية للرسالة */
-        margin-bottom: 10px;
+        margin-bottom: 24px;
     }
 
-    .message-content {
-        font-size: 14px; /* تصغير خط النص قليلاً ليناسب الشاشات الصغيرة */
+    .user-content {
+        max-width: 88%;
     }
 
-    /* تصغير العناوين داخل الشات للموبايل */
-    .markdown-heading h1 { font-size: 20px; }
-    .markdown-heading h2 { font-size: 18px; }
-    .markdown-heading h3 { font-size: 16px; }
+    .assistant-content {
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    .code-block {
+        margin-top: 16px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+
+    .code-header {
+        height: 44px;
+        padding: 0 10px;
+    }
 
     .code-pre {
-        padding: 12px; /* تقليل حواشي الأكواد */
+        padding: 15px;
     }
 
     .code-pre code {
-        font-size: 12px; /* تصغير خط الأكواد لتظهر مساحة أكبر أفقياً */
+        font-size: 12.5px;
+        line-height: 1.6;
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+    .message {
+        width: 100%;
+        max-width: 100%;
+
+        margin-bottom: 20px;
+    }
+
+    /* -------------------------
+       USER MESSAGE
+    ------------------------- */
+
+    .user-content {
+        max-width: 88%;
+
+        padding: 10px 13px;
+
+        border-radius: 16px;
+
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    /* -------------------------
+       AI MESSAGE
+    ------------------------- */
+
+    .assistant-content {
+        width: 100%;
+
+        font-size: 14px;
+
+        line-height: 1.65;
+    }
+
+    .markdown-paragraph {
+        margin-bottom: 15px;
+    }
+
+    .markdown-heading {
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    /* -------------------------
+       CODE BLOCK
+    ------------------------- */
+
+    .code-block {
+        width: 100%;
+
+        margin: 16px 0 20px;
+
+        border-radius: 9px;
+    }
+
+    .code-header {
+        height: 42px;
+
+        padding: 0 9px;
+    }
+
+    .code-language {
+        font-size: 11px;
+    }
+
+    .code-copy-button {
+        font-size: 11px;
+
+        padding: 5px 9px;
+    }
+
+    .code-pre {
+        width: 100%;
+
+        padding: 13px;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .code-pre code {
+        min-width: max-content;
+
+        font-size: 12px;
+
+        line-height: 1.55;
+    }
+
+    /* -------------------------
+       INLINE CODE
+    ------------------------- */
+
+    .assistant-content code:not(.code-block code) {
+        font-size: 12px;
+
+        padding: 2px 5px;
+    }
+
+    /* -------------------------
+       LISTS
+    ------------------------- */
+
+    .markdown-list {
+        padding-right: 20px;
+
+        margin-bottom: 14px;
+    }
+
+    .markdown-list-item {
+        margin-bottom: 5px;
+    }
+
+    /* -------------------------
+       IMAGES
+    ------------------------- */
+
+    .message-images {
+        gap: 6px;
     }
 
     .message-image {
-        width: 72px;  /* تصغير صور الرسائل قليلاً على الموبايل */
-        height: 72px;
+        width: 76px;
+        height: 76px;
+
+        border-radius: 9px;
+    }
+
+    /* -------------------------
+       COPY MESSAGE
+    ------------------------- */
+
+    .message-copy-button {
+        font-size: 11px;
+
+        padding: 4px 7px;
+    }
+}
+
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width: 400px) {
+    .user-content {
+        max-width: 92%;
+
+        padding: 9px 12px;
+    }
+
+    .assistant-content {
+        font-size: 13.5px;
+    }
+
+    .code-header {
+        height: 40px;
+    }
+
+    .code-pre {
+        padding: 11px;
+    }
+
+    .code-pre code {
+        font-size: 11px;
+    }
+
+    .code-copy-button {
+        padding: 4px 7px;
+
+        font-size: 10px;
+    }
+
+    .message-image {
+        width: 68px;
+        height: 68px;
     }
 }

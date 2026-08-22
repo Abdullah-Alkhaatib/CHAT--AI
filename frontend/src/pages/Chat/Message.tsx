@@ -12,8 +12,7 @@ interface MessageProps {
     onImageClick: (imageUrl: string) => void;
 }
 
-interface CodeBlockProps {
-    inline?: boolean;
+interface CodeProps {
     className?: string;
     children?: React.ReactNode;
 }
@@ -46,7 +45,6 @@ const Message = ({
     const handleCopyCode = async (code: string) => {
         try {
             await navigator.clipboard.writeText(code);
-
             return true;
         } catch (error) {
             console.error("Failed to copy code:", error);
@@ -62,187 +60,249 @@ const Message = ({
                     : "message-assistant"
             } ${isNew ? "message-new" : ""}`}
         >
-            {/* Copy entire AI message */}
-            {message.role === "assistant" &&
-                message.content && (
-                    <div className="message-toolbar">
-                        <button
-                            type="button"
-                            className="message-copy-button"
-                            onClick={handleCopyMessage}
-                        >
-                            {copied ? "Copied" : "Copy"}
-                        </button>
-                    </div>
-                )}
+            {/* =========================
+                USER MESSAGE
+            ========================== */}
 
-            {/* Images */}
-            {message.images &&
-                message.images.length > 0 && (
-                    <div className="message-images">
-                        {message.images.map((image, index) => (
-                            <img
-                                key={`${image.url}-${index}`}
-                                className="message-image"
-                                src={image.url}
-                                alt={`Uploaded ${index + 1}`}
-                                onClick={() =>
-                                    onImageClick(image.url)
-                                }
-                            />
-                        ))}
-                    </div>
-                )}
+            {message.role === "user" && (
+                <>
+                    {message.images &&
+                        message.images.length > 0 && (
+                            <div className="message-images">
+                                {message.images.map(
+                                    (image, index) => (
+                                        <img
+                                            key={`${image.url}-${index}`}
+                                            className="message-image"
+                                            src={image.url}
+                                            alt={`Uploaded ${
+                                                index + 1
+                                            }`}
+                                            onClick={() =>
+                                                onImageClick(
+                                                    image.url
+                                                )
+                                            }
+                                        />
+                                    )
+                                )}
+                            </div>
+                        )}
 
-            {/* Message text */}
-            {message.content && (
-                <div className="message-content">
-                    <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                            code({
-                                inline,
-                                className,
-                                children,
-                            }: CodeBlockProps) {
-                                const code = String(children).replace(
-                                    /\n$/,
-                                    ""
-                                );
+                    {message.content && (
+                        <div className="message-content user-content">
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                            >
+                                {message.content}
+                            </ReactMarkdown>
+                        </div>
+                    )}
+                </>
+            )}
 
-                                const languageMatch =
-                                    /language-(\w+)/.exec(
-                                        className || ""
-                                    );
+            {/* =========================
+                ASSISTANT MESSAGE
+            ========================== */}
 
-                                const language =
-                                    languageMatch?.[1] || "code";
+            {message.role === "assistant" && (
+                <>
+                    {message.images &&
+                        message.images.length > 0 && (
+                            <div className="message-images">
+                                {message.images.map(
+                                    (image, index) => (
+                                        <img
+                                            key={`${image.url}-${index}`}
+                                            className="message-image"
+                                            src={image.url}
+                                            alt={`Uploaded ${
+                                                index + 1
+                                            }`}
+                                            onClick={() =>
+                                                onImageClick(
+                                                    image.url
+                                                )
+                                            }
+                                        />
+                                    )
+                                )}
+                            </div>
+                        )}
 
-                                // Inline code مثل `const x = 1`
-                                if (inline) {
-                                    return (
-                                        <code className="inline-code">
-                                            {children}
-                                        </code>
-                                    );
-                                }
+                    {message.content && (
+                        <div className="assistant-content">
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    /* =========================
+                                       CODE
+                                    ========================== */
 
-                                // Code Block
-                                const CodeBlock = () => {
-                                    const [codeCopied, setCodeCopied] =
-                                        useState(false);
+                                    code({
+                                        className,
+                                        children,
+                                    }: CodeProps) {
+                                        const code =
+                                            String(children).replace(
+                                                /\n$/,
+                                                ""
+                                            );
 
-                                    const copyCode = async () => {
-                                        const success =
-                                            await handleCopyCode(code);
+                                        const languageMatch =
+                                            /language-([\w-]+)/.exec(
+                                                className || ""
+                                            );
 
-                                        if (success) {
-                                            setCodeCopied(true);
+                                        const language =
+                                            languageMatch?.[1] ||
+                                            "text";
 
-                                            window.setTimeout(() => {
-                                                setCodeCopied(false);
-                                            }, 1400);
-                                        }
-                                    };
+                                        const [codeCopied, setCodeCopied] =
+                                            useState(false);
 
-                                    return (
-                                        <div className="code-block">
-                                            <div className="code-header">
-                                                <span className="code-language">
-                                                    {language}
-                                                </span>
+                                        const copyCode = async () => {
+                                            const success =
+                                                await handleCopyCode(
+                                                    code
+                                                );
 
-                                                <button
-                                                    type="button"
-                                                    className="code-copy-button"
-                                                    onClick={copyCode}
-                                                >
-                                                    {codeCopied
-                                                        ? "Copied"
-                                                        : "Copy"}
-                                                </button>
+                                            if (success) {
+                                                setCodeCopied(true);
+
+                                                window.setTimeout(() => {
+                                                    setCodeCopied(false);
+                                                }, 1400);
+                                            }
+                                        };
+
+                                        return (
+                                            <div className="code-block">
+                                                <div className="code-header">
+                                                    <span className="code-language">
+                                                        {language.toUpperCase()}
+                                                    </span>
+
+                                                    <button
+                                                        type="button"
+                                                        className="code-copy-button"
+                                                        onClick={
+                                                            copyCode
+                                                        }
+                                                    >
+                                                        {codeCopied
+                                                            ? "Copied"
+                                                            : "Copy"}
+                                                    </button>
+                                                </div>
+
+                                                <pre className="code-pre">
+                                                    <code
+                                                        className={
+                                                            className
+                                                        }
+                                                    >
+                                                        {code}
+                                                    </code>
+                                                </pre>
                                             </div>
+                                        );
+                                    },
 
-                                            <pre className="code-pre">
-                                                <code className={className}>
-                                                    {code}
-                                                </code>
-                                            </pre>
-                                        </div>
-                                    );
-                                };
+                                    /* =========================
+                                       PARAGRAPH
+                                    ========================== */
 
-                                return <CodeBlock />;
-                            },
+                                    p({ children }) {
+                                        return (
+                                            <p className="markdown-paragraph">
+                                                {children}
+                                            </p>
+                                        );
+                                    },
 
-                            p({ children }) {
-                                return (
-                                    <p className="markdown-paragraph">
-                                        {children}
-                                    </p>
-                                );
-                            },
+                                    /* =========================
+                                       HEADINGS
+                                    ========================== */
 
-                            h1({ children }) {
-                                return (
-                                    <h1 className="markdown-heading">
-                                        {children}
-                                    </h1>
-                                );
-                            },
+                                    h1({ children }) {
+                                        return (
+                                            <h1 className="markdown-heading">
+                                                {children}
+                                            </h1>
+                                        );
+                                    },
 
-                            h2({ children }) {
-                                return (
-                                    <h2 className="markdown-heading">
-                                        {children}
-                                    </h2>
-                                );
-                            },
+                                    h2({ children }) {
+                                        return (
+                                            <h2 className="markdown-heading">
+                                                {children}
+                                            </h2>
+                                        );
+                                    },
 
-                            h3({ children }) {
-                                return (
-                                    <h3 className="markdown-heading">
-                                        {children}
-                                    </h3>
-                                );
-                            },
+                                    h3({ children }) {
+                                        return (
+                                            <h3 className="markdown-heading">
+                                                {children}
+                                            </h3>
+                                        );
+                                    },
 
-                            ul({ children }) {
-                                return (
-                                    <ul className="markdown-list">
-                                        {children}
-                                    </ul>
-                                );
-                            },
+                                    /* =========================
+                                       LISTS
+                                    ========================== */
 
-                            ol({ children }) {
-                                return (
-                                    <ol className="markdown-list">
-                                        {children}
-                                    </ol>
-                                );
-                            },
+                                    ul({ children }) {
+                                        return (
+                                            <ul className="markdown-list">
+                                                {children}
+                                            </ul>
+                                        );
+                                    },
 
-                            li({ children }) {
-                                return (
-                                    <li className="markdown-list-item">
-                                        {children}
-                                    </li>
-                                );
-                            },
+                                    ol({ children }) {
+                                        return (
+                                            <ol className="markdown-list">
+                                                {children}
+                                            </ol>
+                                        );
+                                    },
 
-                            blockquote({ children }) {
-                                return (
-                                    <blockquote className="markdown-blockquote">
-                                        {children}
-                                    </blockquote>
-                                );
-                            },
-                        }}
-                    >
-                        {message.content}
-                    </ReactMarkdown>
-                </div>
+                                    li({ children }) {
+                                        return (
+                                            <li className="markdown-list-item">
+                                                {children}
+                                            </li>
+                                        );
+                                    },
+
+                                    /* =========================
+                                       INLINE CODE
+                                    ========================== */
+
+                                    // inline code is handled naturally
+                                    // by react-markdown
+                                }}
+                            >
+                                {message.content}
+                            </ReactMarkdown>
+
+                            {/* Copy whole response */}
+                            <div className="message-actions">
+                                <button
+                                    type="button"
+                                    className="message-copy-button"
+                                    onClick={handleCopyMessage}
+                                >
+                                    {copied
+                                        ? "Copied"
+                                        : "Copy"}
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );
