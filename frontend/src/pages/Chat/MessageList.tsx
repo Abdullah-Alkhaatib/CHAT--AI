@@ -15,11 +15,19 @@ const MessageList = ({
     messages,
     loading,
 }: MessageListProps) => {
-    const [zoomedImageUrl, setZoomedImageUrl] = useState<string | null>(null);
+    const [zoomedImageUrl, setZoomedImageUrl] =
+        useState<string | null>(null);
+
     const [highlightedMessageIndex, setHighlightedMessageIndex] =
         useState<number | null>(null);
+
     const scrollerRef = useRef<HTMLDivElement | null>(null);
+
     const previousMessageCountRef = useRef(0);
+
+    /* =========================================================
+       AUTO SCROLL
+    ========================================================= */
 
     useEffect(() => {
         const scroller = scrollerRef.current;
@@ -34,65 +42,111 @@ const MessageList = ({
         });
     }, [messages, loading]);
 
+    /* =========================================================
+       HIGHLIGHT NEW MESSAGE
+    ========================================================= */
+
     useEffect(() => {
         if (loading) {
             previousMessageCountRef.current = messages.length;
             return;
         }
 
-        const previousCount = previousMessageCountRef.current;
+        const previousCount =
+            previousMessageCountRef.current;
 
-        if (messages.length > previousCount && messages.length > 0) {
-            const newestIndex = messages.length - 1;
-            setHighlightedMessageIndex(newestIndex);
+        if (
+            messages.length > previousCount &&
+            messages.length > 0
+        ) {
+            const newestIndex =
+                messages.length - 1;
+
+            setHighlightedMessageIndex(
+                newestIndex
+            );
 
             const timer = window.setTimeout(() => {
-                setHighlightedMessageIndex((current) =>
-                    current === newestIndex ? null : current
+                setHighlightedMessageIndex(
+                    (current) =>
+                        current === newestIndex
+                            ? null
+                            : current
                 );
             }, 1800);
 
-            previousMessageCountRef.current = messages.length;
+            previousMessageCountRef.current =
+                messages.length;
 
             return () => {
                 window.clearTimeout(timer);
             };
         }
 
-        previousMessageCountRef.current = messages.length;
+        previousMessageCountRef.current =
+            messages.length;
     }, [messages, loading]);
+
+    /* =========================================================
+       LOADING / AI TYPING
+    ========================================================= */
 
     if (loading) {
         return (
-            <div className="message-list" ref={scrollerRef}>
+            <div
+                className="message-list"
+                ref={scrollerRef}
+            >
                 <div className="message-list-container">
-                    <p className="message-list-loading">
-                        Loading chat...
-                    </p>
+                    <div className="typing-message">
+                        <div className="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
     }
 
+    /* =========================================================
+       MESSAGES
+    ========================================================= */
+
     return (
-        <div className="message-list" ref={scrollerRef}>
+        <div
+            className="message-list"
+            ref={scrollerRef}
+        >
             <div className="message-list-container">
                 {messages.map((message, index) => (
                     <Message
                         key={`${message.role}-${index}`}
                         message={message}
-                        isNew={index === highlightedMessageIndex}
-                        onImageClick={setZoomedImageUrl}
+                        isNew={
+                            index ===
+                            highlightedMessageIndex
+                        }
+                        onImageClick={
+                            setZoomedImageUrl
+                        }
                     />
                 ))}
             </div>
+
+            {/* =================================================
+                IMAGE PREVIEW MODAL
+            ================================================= */}
 
             {zoomedImageUrl && (
                 <button
                     type="button"
                     className="message-image-modal"
                     aria-label="Close image preview"
-                    onClick={() => setZoomedImageUrl(null)}
+                    onClick={() =>
+                        setZoomedImageUrl(null)
+                    }
                 >
                     <img
                         className="message-image-modal-content"

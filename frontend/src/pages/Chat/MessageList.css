@@ -1,3 +1,7 @@
+/* =========================================================
+   MESSAGE LIST
+========================================================= */
+
 .message-list {
     flex: 1;
 
@@ -7,10 +11,14 @@
     overscroll-behavior: contain;
 
     box-sizing: border-box;
-    
-    /* تحسين سلاسة السكرول على أجهزة اللمس (الهواتف والتابلت) */
+
+    /* تحسين سلاسة السكرول على أجهزة اللمس */
     -webkit-overflow-scrolling: touch;
 }
+
+/* =========================================================
+   MESSAGE LIST CONTAINER
+========================================================= */
 
 .message-list-container {
     width: 100%;
@@ -23,51 +31,158 @@
     box-sizing: border-box;
 }
 
+/* =========================================================
+   OLD LOADING TEXT
+========================================================= */
+
 .message-list-loading {
     color: #a8a8a8;
     font-size: 14px;
 }
 
+/* =========================================================
+   AI TYPING INDICATOR
+========================================================= */
+
+.typing-message {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+
+    padding: 8px 0;
+
+    box-sizing: border-box;
+}
+
+.typing-dots {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    height: 24px;
+}
+
+.typing-dots span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #9a9a9a;
+
+    animation: typing-bounce 1.4s infinite ease-in-out;
+}
+
+/* النقطة الأولى */
+.typing-dots span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+/* النقطة الثانية */
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+/* النقطة الثالثة */
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+/* حركة النقاط */
+@keyframes typing-bounce {
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.35;
+    }
+
+    30% {
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+}
+
+/* =========================================================
+   IMAGE MODAL
+========================================================= */
+
 .message-image-modal {
     position: fixed;
     inset: 0;
+
     z-index: 1200;
+
     border: none;
     padding: 24px;
     margin: 0;
+
     background: rgba(0, 0, 0, 0.82);
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     cursor: zoom-out;
 }
 
 .message-image-modal-content {
     max-width: min(96vw, 1200px);
     max-height: 92vh;
+
     width: auto;
     height: auto;
+
     object-fit: contain;
+
     border-radius: 14px;
+
     box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
 }
 
-/* =========================================
-   RESPONSIVE (التجاوب مع الشاشات الصغيرة)
-========================================= */
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* =========================
+   MOBILE
+========================= */
+
 @media screen and (max-width: 600px) {
     .message-list-container {
-        /* تقليل الهوامش الجانبية على الموبايل لإعطاء مساحة أكبر للرسائل */
-        padding: 20px 12px 120px; 
+        /* تقليل الهوامش الجانبية على الموبايل */
+        padding: 20px 12px 120px;
     }
 
     .message-image-modal {
-        padding: 12px; /* تقليل حواشي المودال لتستغل الصورة مساحة أكبر من شاشة الهاتف */
+        /* استغلال مساحة أكبر للصورة */
+        padding: 12px;
     }
 
     .message-image-modal-content {
-        max-width: 100vw; /* السماح للصورة بأخذ كامل عرض شاشة الموبايل عند التكبير */
+        max-width: 100vw;
         max-height: 85vh;
+
         border-radius: 10px;
+    }
+
+    /* -------------------------
+       TYPING INDICATOR
+    ------------------------- */
+
+    .typing-message {
+        padding: 6px 0;
+    }
+
+    .typing-dots {
+        gap: 4px;
+        height: 22px;
+    }
+
+    .typing-dots span {
+        width: 6px;
+        height: 6px;
     }
 }
