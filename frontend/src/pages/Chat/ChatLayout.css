@@ -1,6 +1,8 @@
 .chat-layout {
     width: 100%;
     height: 100vh;
+    /* استخدام dvh بدلاً من vh إن أمكن لحل مشكلة شريط المتصفح في الهواتف، و vh كبديل آمن */
+    height: 100dvh; 
 
     display: flex;
 
@@ -8,17 +10,19 @@
     color: #ffffff;
 
     overflow: hidden;
+    position: relative; /* ضروري لضبط تمركز الزر المطلق داخله */
 }
 
 .chat-main {
     flex: 1;
-    min-width: 0;
-    height: 100vh;
+    min-width: 0; /* مهم جداً لمنع تمدد الكونتينر خارج الشاشة في الفليكس */
+    height: 100%;
 
     display: flex;
     flex-direction: column;
 
     overflow: hidden;
+    position: relative;
 }
 
 .sidebar-open-trigger-btn {
@@ -41,9 +45,26 @@
     color: #ffffff;
     cursor: pointer;
     
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .sidebar-open-trigger-btn:hover {
     background-color: #242424;
+}
+
+.sidebar-open-trigger-btn:active {
+    transform: scale(0.95);
+}
+
+/* =========================================
+   RESPONSIVE (التجاوب مع الشاشات الصغيرة)
+========================================= */
+@media screen and (max-width: 768px) {
+    .sidebar-open-trigger-btn {
+        top: 10px;
+        left: 10px;
+        width: 36px;  /* تصغير حجم الزر قليلاً على الموبايل لتوفير مساحة */
+        height: 36px;
+        font-size: 18px; /* في حال احتوى على أيقونة بداخلة تتأثر بالحجم */
+    }
 }

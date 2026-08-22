@@ -1,6 +1,7 @@
 .sidebar {
     width: 260px;
     height: 100vh;
+    height: 100dvh; /* لدعم الموبايل وتجنب مشاكل شريط المتصفح */
     display: flex;
     flex-direction: column;
     padding: 14px;
@@ -8,8 +9,12 @@
     color: #ffffff;
     border-right: 1px solid #2a2a2a;
     box-sizing: border-box;
-    transition: transform 0.3s ease, width 0.3s ease;
+    transition: transform 0.3s ease, width 0.3s ease, padding 0.3s ease;
     flex-shrink: 0;
+    
+    /* خصائص أساسية لتحسين السكرول الداخلي والتحكم في الطبقات */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* حالة إغلاق السايدبار */
@@ -67,9 +72,10 @@
     background-color: #242424;
 }
 
-/* باقي الكلاسات القديمة تبقى كما هي بدون تغيير ... */
+/* القائمة الجانبية وتاريخ المحادثات */
 .sidebar-chat-history { 
     flex: 1;
+    overflow-y: auto;
 }
 
 .sidebar-history-title { 
@@ -85,24 +91,37 @@
     gap: 3px; 
 }
 
-.sidebar-chat-item { 
-    width: 100%; 
-    padding: 10px 12px; 
-    border: none; 
-    border-radius: 7px; 
-    background: transparent; 
-    text-align: left; 
-    box-sizing: border-box; 
-    cursor: pointer; 
-    transition: 
-    background-color 0.2s ease; 
+.sidebar-chat-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-radius: 7px;
 }
 
-.sidebar-chat-item:hover { 
+.sidebar-chat-row:hover {
     background-color: #242424;
 }
 
-.sidebar-chat-item-active { 
+.sidebar-chat-item {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    text-align: left;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-chat-item:hover {
+    background-color: transparent;
+}
+
+.sidebar-chat-item-active {
     background-color: #2a2a2a; 
 }
 
@@ -113,6 +132,38 @@
     font-size: 14px; 
     white-space: nowrap; 
     text-overflow: ellipsis; 
+}
+
+.sidebar-delete-chat-button {
+    width: 34px;
+    height: 34px;
+    margin-right: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+
+    color: #777777;
+    cursor: pointer;
+
+    opacity: 0;
+    transition:
+        opacity 0.2s ease,
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.sidebar-chat-row .sidebar-delete-chat-button {
+    opacity: 1; /* على الموبايل والتابلت يفضل دائماً إظهار زر الحذف أو جعل التحكم أسهل */
+}
+
+.sidebar-delete-chat-button:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ff6b6b;
 }
 
 .sidebar-footer { 
@@ -149,8 +200,8 @@
 }
 
 .sidebar-user-info { 
-    min-width: 0; display: 
-    flex; 
+    min-width: 0; 
+    display: flex; 
     flex-direction: column; 
     gap: 2px; 
 }
@@ -183,71 +234,32 @@
 }
 
 .sidebar-logout-button:hover { 
-    background-color: rgba(239, 68, 68, 0.12); 
+    background: rgba(239, 68, 68, 0.12); 
 }
 
-.sidebar-chat-row {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    border-radius: 7px;
-}
+/* =========================================
+   RESPONSIVE (التجاوب مع الشاشات الصغيرة)
+========================================= */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        position: absolute; /* تحويله ليكون عائماً فوق المحتوى في الهواتف */
+        top: 0;
+        left: 0;
+        z-index: 1100; /* لضمان ظهوره فوق كل عناصر الشات الأخرى */
+        width: 280px;  /* زيادة العرض قليلاً على الموبايل ليصبح مريحاً للاستخدام */
+        box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5); /* ظل لإعطاء إيحاء بأنه نافذة منبثقة */
+    }
 
-.sidebar-chat-row:hover {
-    background-color: #242424;
-}
+    /* عندما يكون مغلقاً على الموبايل */
+    .sidebar.sidebar-closed {
+        transform: translateX(-100%);
+        width: 280px; /* يحافظ على العرض وهميأً والـ transform يخفيه للخارج لمنع مشاكل التحريك */
+        padding: 14px;
+        border-right: 1px solid #2a2a2a;
+    }
 
-.sidebar-chat-item {
-    flex: 1;
-    min-width: 0;
-    width: auto;
-    padding: 10px 12px;
-    border: none;
-    border-radius: 7px;
-    background: transparent;
-    text-align: left;
-    box-sizing: border-box;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.sidebar-chat-item:hover {
-    background-color: transparent;
-}
-
-.sidebar-chat-item-active {
-    background-color: #2a2a2a;
-}
-
-.sidebar-delete-chat-button {
-    width: 34px;
-    height: 34px;
-    margin-right: 4px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: none;
-    border-radius: 6px;
-    background: transparent;
-
-    color: #777777;
-    cursor: pointer;
-
-    opacity: 0;
-    transition:
-        opacity 0.2s ease,
-        background-color 0.2s ease,
-        color 0.2s ease;
-}
-
-.sidebar-chat-row .sidebar-delete-chat-button {
-    opacity: 1;
-}
-
-.sidebar-delete-chat-button:hover {
-    background-color: rgba(239, 68, 68, 0.15);
-    color: #ff6b6b;
+    /* إظهار زر الحذف دائماً على أجهزة اللمس لعدم توفر خاصية الـ Hover */
+    .sidebar-delete-chat-button {
+        opacity: 1 !important; 
+    }
 }

@@ -249,3 +249,33 @@
     font-size: 11px;
     text-align: center;
 }
+
+/* =========================================
+   RESPONSIVE (التجاوب مع الشاشات الصغيرة)
+========================================= */
+@media screen and (max-width: 600px) {
+    .chat-input-wrapper {
+        padding: 12px 12px 10px; /* تقليص الهوامش الجانبية للاستفادة من مساحة الموبايل */
+    }
+
+    .chat-input-preview-item {
+        width: 60px;  /* تصغير أبعاد الصور المعاينة قليلاً */
+        height: 60px;
+    }
+
+    .chat-input {
+        font-size: 14px; /* تصغير خط الكتابة قليلاً لمنع التضارب */
+        padding: 7px 6px;
+    }
+
+    .chat-input-attach-button,
+    .chat-input-send-button {
+        width: 36px;  /* تصغير الأزرار مساحة بسيطة لتلائم الهواتف */
+        height: 36px;
+        font-size: 18px;
+    }
+
+    .chat-input-disclaimer {
+        font-size: 10px; /* تصغير نص التحذير بالأسفل ليظهر بشكل أنظف */
+    }
+}

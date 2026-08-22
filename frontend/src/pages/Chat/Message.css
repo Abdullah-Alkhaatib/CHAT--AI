@@ -32,6 +32,7 @@
     margin: 0;
     direction: rtl;
     text-align: right;
+    word-break: break-word; /* منع الكلمات الطويلة جداً من كسر التنسيق */
 }
 
 .markdown-paragraph {
@@ -104,6 +105,7 @@
         monospace;
 
     font-size: 13px;
+    word-break: break-all; /* لمنع الأكواد القصيرة المتصلة من الخروج */
 }
 
 /* =========================================
@@ -112,6 +114,7 @@
 
 .code-block {
     width: 100%;
+    max-width: 100%; /* ضمان عدم خروج الحاوية عن شاشة الموبايل */
     margin: 14px 0;
 
     direction: ltr;
@@ -186,12 +189,15 @@
     margin: 0;
     padding: 16px;
 
-    overflow-x: auto;
+    overflow-x: auto; /* يسمح بالتمرير الأفقي للأكواد الطويلة على الموبايل دون كسر التصميم */
 
     direction: ltr;
     text-align: left;
 
     background: #111111;
+    
+    /* تحسين السكرولبار داخل الأكواد للشاشات الصغيرة */
+    -webkit-overflow-scrolling: touch; 
 }
 
 .code-pre code {
@@ -262,7 +268,7 @@
 }
 
 /* =========================================
-   NEW MESSAGE
+    NEW MESSAGE
 ========================================= */
 
 .message-new {
@@ -313,4 +319,37 @@
     gap: 8px;
 
     margin-bottom: 8px;
+}
+
+/* =========================================
+   RESPONSIVE (التجاوب مع الشاشات الصغيرة)
+========================================= */
+@media screen and (max-width: 600px) {
+    .message {
+        max-width: 100%; /* اجعل الرسالة تأخذ عرض الشاشة بالكامل في الهواتف المجاورة */
+        padding: 10px 12px; /* تقليل الهوامش الداخلية للرسالة */
+        margin-bottom: 10px;
+    }
+
+    .message-content {
+        font-size: 14px; /* تصغير خط النص قليلاً ليناسب الشاشات الصغيرة */
+    }
+
+    /* تصغير العناوين داخل الشات للموبايل */
+    .markdown-heading h1 { font-size: 20px; }
+    .markdown-heading h2 { font-size: 18px; }
+    .markdown-heading h3 { font-size: 16px; }
+
+    .code-pre {
+        padding: 12px; /* تقليل حواشي الأكواد */
+    }
+
+    .code-pre code {
+        font-size: 12px; /* تصغير خط الأكواد لتظهر مساحة أكبر أفقياً */
+    }
+
+    .message-image {
+        width: 72px;  /* تصغير صور الرسائل قليلاً على الموبايل */
+        height: 72px;
+    }
 }

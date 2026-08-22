@@ -6,8 +6,10 @@
     overflow-y: auto;
     overscroll-behavior: contain;
 
-
     box-sizing: border-box;
+    
+    /* تحسين سلاسة السكرول على أجهزة اللمس (الهواتف والتابلت) */
+    -webkit-overflow-scrolling: touch;
 }
 
 .message-list-container {
@@ -48,4 +50,24 @@
     object-fit: contain;
     border-radius: 14px;
     box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================================
+   RESPONSIVE (التجاوب مع الشاشات الصغيرة)
+========================================= */
+@media screen and (max-width: 600px) {
+    .message-list-container {
+        /* تقليل الهوامش الجانبية على الموبايل لإعطاء مساحة أكبر للرسائل */
+        padding: 20px 12px 120px; 
+    }
+
+    .message-image-modal {
+        padding: 12px; /* تقليل حواشي المودال لتستغل الصورة مساحة أكبر من شاشة الهاتف */
+    }
+
+    .message-image-modal-content {
+        max-width: 100vw; /* السماح للصورة بأخذ كامل عرض شاشة الموبايل عند التكبير */
+        max-height: 85vh;
+        border-radius: 10px;
+    }
 }
