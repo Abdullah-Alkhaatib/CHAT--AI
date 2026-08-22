@@ -9,11 +9,13 @@ import "./MessageList.css";
 interface MessageListProps {
     messages: ChatMessage[];
     loading: boolean;
+    sending: boolean;
 }
 
 const MessageList = ({
     messages,
     loading,
+    sending,
 }: MessageListProps) => {
     const [zoomedImageUrl, setZoomedImageUrl] =
         useState<string | null>(null);
@@ -40,7 +42,7 @@ const MessageList = ({
             top: scroller.scrollHeight,
             behavior: "smooth",
         });
-    }, [messages, loading]);
+    }, [messages, loading, sending]);
 
     /* =========================================================
        HIGHLIGHT NEW MESSAGE
@@ -88,7 +90,7 @@ const MessageList = ({
     }, [messages, loading]);
 
     /* =========================================================
-       LOADING / AI TYPING
+       INITIAL CHAT LOADING
     ========================================================= */
 
     if (loading) {
@@ -98,13 +100,9 @@ const MessageList = ({
                 ref={scrollerRef}
             >
                 <div className="message-list-container">
-                    <div className="typing-message">
-                        <div className="typing-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
+                    <p className="message-list-loading">
+                        Loading chat...
+                    </p>
                 </div>
             </div>
         );
@@ -120,6 +118,11 @@ const MessageList = ({
             ref={scrollerRef}
         >
             <div className="message-list-container">
+
+                {/* =========================
+                    CHAT MESSAGES
+                ========================= */}
+
                 {messages.map((message, index) => (
                     <Message
                         key={`${message.role}-${index}`}
@@ -133,11 +136,25 @@ const MessageList = ({
                         }
                     />
                 ))}
+
+                {/* =========================
+                    AI TYPING INDICATOR
+                ========================= */}
+
+                {sending && (
+                    <div className="typing-message">
+                        <div className="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* =================================================
-                IMAGE PREVIEW MODAL
-            ================================================= */}
+            {/* =========================
+                IMAGE MODAL
+            ========================= */}
 
             {zoomedImageUrl && (
                 <button

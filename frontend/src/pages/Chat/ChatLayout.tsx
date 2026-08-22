@@ -604,6 +604,7 @@ const ChatLayout = () => {
                 <MessageList
                     messages={messages}
                     loading={loading}
+                    sending={sending}
                 />
 
                 {/* =========================================
