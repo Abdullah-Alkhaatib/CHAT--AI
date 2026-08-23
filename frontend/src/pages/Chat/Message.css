@@ -334,7 +334,9 @@
 
     line-height: 1.65;
 
-    white-space: pre;
+    white-space: pre-wrap; /* تم التعديل هنا لتنزيل الأسطر الطويلة تلقائياً */
+    word-break: break-word; /* كسر الكلمات الطويلة لعدم الخروج عن الحدود */
+    overflow-wrap: break-word;
 
     direction: ltr;
 
