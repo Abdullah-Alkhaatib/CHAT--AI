@@ -11,6 +11,7 @@
     box-sizing: border-box;
 }
 
+
 /* =========================================================
    USER MESSAGE
 ========================================================= */
@@ -30,10 +31,47 @@
     background: #2b2f36;
 
     border: 1px solid #3b4450;
+
     border-radius: 18px;
 
     color: #eeeeee;
+
+    font-size: 15px;
+
+    line-height: 1.65;
+
+    text-align: start;
+
+    overflow-wrap: anywhere;
+
+    box-sizing: border-box;
 }
+
+
+/* =========================================================
+   USER MARKDOWN
+========================================================= */
+
+.user-content .markdown-paragraph {
+    margin: 0 0 12px;
+}
+
+.user-content .markdown-paragraph:last-child {
+    margin-bottom: 0;
+}
+
+.user-content .markdown-heading {
+    margin: 20px 0 10px;
+
+    color: #f1f1f1;
+
+    line-height: 1.4;
+}
+
+.user-content .markdown-heading:first-child {
+    margin-top: 0;
+}
+
 
 /* =========================================================
    ASSISTANT MESSAGE
@@ -43,9 +81,11 @@
     width: 100%;
 
     background: transparent;
+
     border: none;
 
     margin-right: 0;
+
     padding: 0;
 }
 
@@ -55,11 +95,14 @@
     color: #e5e5e5;
 
     font-size: 15px;
+
     line-height: 1.75;
 
     text-align: start;
 
+    overflow-wrap: anywhere;
 }
+
 
 /* =========================================================
    PARAGRAPHS
@@ -72,6 +115,7 @@
 .markdown-paragraph:last-child {
     margin-bottom: 0;
 }
+
 
 /* =========================================================
    HEADINGS
@@ -89,6 +133,7 @@
     margin-top: 0;
 }
 
+
 /* =========================================================
    LISTS
 ========================================================= */
@@ -103,12 +148,15 @@
     margin-bottom: 6px;
 }
 
+
 /* =========================================================
    INLINE CODE
 ========================================================= */
 
-.assistant-content code:not(.code-block code) {
+.inline-code {
     direction: ltr;
+
+    display: inline;
 
     background: #2a2a2a;
 
@@ -126,8 +174,13 @@
         "Courier New",
         monospace;
 
-    font-size: 13px;
+    font-size: 0.9em;
+
+    white-space: pre-wrap;
+
+    unicode-bidi: isolate;
 }
+
 
 /* =========================================================
    CODE BLOCK
@@ -155,6 +208,7 @@
     box-sizing: border-box;
 }
 
+
 /* =========================================================
    CODE HEADER
 ========================================================= */
@@ -177,6 +231,11 @@
     box-sizing: border-box;
 }
 
+
+/* =========================================================
+   CODE LANGUAGE
+========================================================= */
+
 .code-language {
     color: #bdbdbd;
 
@@ -188,7 +247,14 @@
     font-size: 12px;
 
     font-weight: 600;
+
+    letter-spacing: 0.3px;
 }
+
+
+/* =========================================================
+   CODE COPY BUTTON
+========================================================= */
 
 .code-copy-button {
     border: 1px solid #4a4a4a;
@@ -209,7 +275,8 @@
 
     transition:
         background-color 0.2s ease,
-        border-color 0.2s ease;
+        border-color 0.2s ease,
+        transform 0.1s ease;
 }
 
 .code-copy-button:hover {
@@ -217,6 +284,11 @@
 
     border-color: #666666;
 }
+
+.code-copy-button:active {
+    transform: scale(0.96);
+}
+
 
 /* =========================================================
    CODE CONTENT
@@ -238,7 +310,14 @@
     direction: ltr;
 
     text-align: left;
+
+    -webkit-overflow-scrolling: touch;
 }
+
+
+/* =========================================================
+   CODE TEXT
+========================================================= */
 
 .code-pre code {
     display: block;
@@ -260,7 +339,12 @@
     direction: ltr;
 
     text-align: left;
+
+    unicode-bidi: isolate;
+
+    tab-size: 4;
 }
+
 
 /* =========================================================
    MESSAGE ACTIONS
@@ -273,6 +357,11 @@
 
     margin-top: 8px;
 }
+
+
+/* =========================================================
+   MESSAGE COPY BUTTON
+========================================================= */
 
 .message-copy-button {
     border: none;
@@ -300,6 +389,7 @@
     color: #dddddd;
 }
 
+
 /* =========================================================
    IMAGES
 ========================================================= */
@@ -318,6 +408,7 @@
     display: block;
 
     width: 88px;
+
     height: 88px;
 
     object-fit: cover;
@@ -328,6 +419,7 @@
 
     border: 1px solid rgba(255, 255, 255, 0.12);
 }
+
 
 /* =========================================================
    NEW MESSAGE
@@ -356,9 +448,10 @@
    RESPONSIVE
 ========================================================= */
 
-/* =========================
+
+/* =========================================================
    TABLET
-========================= */
+========================================================= */
 
 @media (max-width: 900px) {
     .message {
@@ -371,17 +464,21 @@
 
     .assistant-content {
         font-size: 15px;
+
         line-height: 1.7;
     }
 
     .code-block {
         margin-top: 16px;
+
         margin-bottom: 20px;
+
         border-radius: 10px;
     }
 
     .code-header {
         height: 44px;
+
         padding: 0 10px;
     }
 
@@ -391,26 +488,29 @@
 
     .code-pre code {
         font-size: 12.5px;
+
         line-height: 1.6;
     }
 }
 
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 600px) {
     .message {
         width: 100%;
+
         max-width: 100%;
 
         margin-bottom: 20px;
     }
 
-    /* -------------------------
+
+    /* -----------------------------------------
        USER MESSAGE
-    ------------------------- */
+    ----------------------------------------- */
 
     .user-content {
         max-width: 88%;
@@ -420,12 +520,14 @@
         border-radius: 16px;
 
         font-size: 14px;
+
         line-height: 1.55;
     }
 
-    /* -------------------------
+
+    /* -----------------------------------------
        AI MESSAGE
-    ------------------------- */
+    ----------------------------------------- */
 
     .assistant-content {
         width: 100%;
@@ -435,18 +537,41 @@
         line-height: 1.65;
     }
 
+
+    /* -----------------------------------------
+       PARAGRAPHS
+    ----------------------------------------- */
+
     .markdown-paragraph {
         margin-bottom: 15px;
     }
 
+
+    /* -----------------------------------------
+       HEADINGS
+    ----------------------------------------- */
+
     .markdown-heading {
         margin-top: 20px;
+
         margin-bottom: 10px;
     }
 
-    /* -------------------------
+
+    /* -----------------------------------------
+       INLINE CODE
+    ----------------------------------------- */
+
+    .inline-code {
+        font-size: 12px;
+
+        padding: 2px 5px;
+    }
+
+
+    /* -----------------------------------------
        CODE BLOCK
-    ------------------------- */
+    ----------------------------------------- */
 
     .code-block {
         width: 100%;
@@ -455,6 +580,11 @@
 
         border-radius: 9px;
     }
+
+
+    /* -----------------------------------------
+       CODE HEADER
+    ----------------------------------------- */
 
     .code-header {
         height: 42px;
@@ -471,6 +601,11 @@
 
         padding: 5px 9px;
     }
+
+
+    /* -----------------------------------------
+       CODE CONTENT
+    ----------------------------------------- */
 
     .code-pre {
         width: 100%;
@@ -490,19 +625,10 @@
         line-height: 1.55;
     }
 
-    /* -------------------------
-       INLINE CODE
-    ------------------------- */
 
-    .assistant-content code:not(.code-block code) {
-        font-size: 12px;
-
-        padding: 2px 5px;
-    }
-
-    /* -------------------------
+    /* -----------------------------------------
        LISTS
-    ------------------------- */
+    ----------------------------------------- */
 
     .markdown-list {
         padding-inline-start: 20px;
@@ -514,9 +640,10 @@
         margin-bottom: 5px;
     }
 
-    /* -------------------------
+
+    /* -----------------------------------------
        IMAGES
-    ------------------------- */
+    ----------------------------------------- */
 
     .message-images {
         gap: 6px;
@@ -524,14 +651,16 @@
 
     .message-image {
         width: 76px;
+
         height: 76px;
 
         border-radius: 9px;
     }
 
-    /* -------------------------
+
+    /* -----------------------------------------
        COPY MESSAGE
-    ------------------------- */
+    ----------------------------------------- */
 
     .message-copy-button {
         font-size: 11px;
@@ -541,9 +670,9 @@
 }
 
 
-/* =========================
+/* =========================================================
    SMALL PHONES
-========================= */
+========================================================= */
 
 @media (max-width: 400px) {
     .user-content {
@@ -576,6 +705,7 @@
 
     .message-image {
         width: 68px;
+
         height: 68px;
     }
 }

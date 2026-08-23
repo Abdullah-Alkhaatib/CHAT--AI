@@ -54,6 +54,10 @@ const CodeBlock = ({
 
     return (
         <div className="code-block">
+            {/* =================================================
+                CODE HEADER
+            ================================================= */}
+
             <div className="code-header">
                 <span className="code-language">
                     {language.toUpperCase()}
@@ -67,6 +71,10 @@ const CodeBlock = ({
                     {copied ? "Copied" : "Copy"}
                 </button>
             </div>
+
+            {/* =================================================
+                CODE
+            ================================================= */}
 
             <pre className="code-pre">
                 <code className={className}>
@@ -87,6 +95,10 @@ const Message = ({
     onImageClick,
 }: MessageProps) => {
     const [copied, setCopied] = useState(false);
+
+    /* =======================================================
+       COPY ENTIRE MESSAGE
+    ======================================================= */
 
     const handleCopyMessage = async () => {
         if (!message.content?.trim()) {
@@ -125,6 +137,10 @@ const Message = ({
 
             {message.role === "user" && (
                 <>
+                    {/* =========================================
+                        USER IMAGES
+                    ========================================= */}
+
                     {message.images &&
                         message.images.length > 0 && (
                             <div className="message-images">
@@ -148,12 +164,134 @@ const Message = ({
                             </div>
                         )}
 
+                    {/* =========================================
+                        USER CONTENT
+                    ========================================= */}
+
                     {message.content && (
-                        <div className="message-content user-content">
+                        <div
+                            className="message-content user-content"
+                            dir="auto"
+                        >
                             <ReactMarkdown
                                 remarkPlugins={[
                                     remarkGfm,
                                 ]}
+                                components={{
+                                    /* ---------------------------------
+                                       INLINE / BLOCK CODE
+                                    --------------------------------- */
+
+                                    code: ({
+                                        className,
+                                        children,
+                                        ...props
+                                    }) => {
+                                        const isCodeBlock =
+                                            Boolean(
+                                                className
+                                            );
+
+                                        /* -----------------------------
+                                           INLINE CODE
+                                        ----------------------------- */
+
+                                        if (
+                                            !isCodeBlock
+                                        ) {
+                                            return (
+                                                <code
+                                                    className="inline-code"
+                                                    {...props}
+                                                >
+                                                    {children}
+                                                </code>
+                                            );
+                                        }
+
+                                        /* -----------------------------
+                                           CODE BLOCK
+                                        ----------------------------- */
+
+                                        return (
+                                            <CodeBlock
+                                                className={
+                                                    className
+                                                }
+                                            >
+                                                {children}
+                                            </CodeBlock>
+                                        );
+                                    },
+
+                                    /* ---------------------------------
+                                       PARAGRAPH
+                                    --------------------------------- */
+
+                                    p: ({
+                                        children,
+                                    }) => (
+                                        <p className="markdown-paragraph">
+                                            {children}
+                                        </p>
+                                    ),
+
+                                    /* ---------------------------------
+                                       HEADINGS
+                                    --------------------------------- */
+
+                                    h1: ({
+                                        children,
+                                    }) => (
+                                        <h1 className="markdown-heading">
+                                            {children}
+                                        </h1>
+                                    ),
+
+                                    h2: ({
+                                        children,
+                                    }) => (
+                                        <h2 className="markdown-heading">
+                                            {children}
+                                        </h2>
+                                    ),
+
+                                    h3: ({
+                                        children,
+                                    }) => (
+                                        <h3 className="markdown-heading">
+                                            {children}
+                                        </h3>
+                                    ),
+
+                                    /* ---------------------------------
+                                       LISTS
+                                    --------------------------------- */
+
+                                    ul: ({
+                                        children,
+                                    }) => (
+                                        <ul className="markdown-list">
+                                            {children}
+                                        </ul>
+                                    ),
+
+                                    ol: ({
+                                        children,
+                                    }) => (
+                                        <ol className="markdown-list">
+                                            {children}
+                                        </ol>
+                                    ),
+
+                                    li: ({
+                                        children,
+                                    }) => (
+                                        <li className="markdown-list-item">
+                                            {children}
+                                        </li>
+                                    ),
+                                }}
                             >
                                 {message.content}
                             </ReactMarkdown>
@@ -168,6 +306,10 @@ const Message = ({
 
             {message.role === "assistant" && (
                 <>
+                    {/* =========================================
+                        ASSISTANT IMAGES
+                    ========================================= */}
+
                     {message.images &&
                         message.images.length > 0 && (
                             <div className="message-images">
@@ -191,61 +333,129 @@ const Message = ({
                             </div>
                         )}
 
+                    {/* =========================================
+                        ASSISTANT CONTENT
+                    ========================================= */}
+
                     {message.content && (
-                        <div className="assistant-content" dir="auto">
+                        <div
+                            className="assistant-content"
+                            dir="auto"
+                        >
                             <ReactMarkdown
                                 remarkPlugins={[
                                     remarkGfm,
                                 ]}
                                 components={{
+                                    /* ---------------------------------
+                                       INLINE / BLOCK CODE
+                                    --------------------------------- */
+
                                     code: ({
                                         className,
                                         children,
-                                    }) => (
-                                        <CodeBlock
-                                            className={className}
-                                        >
-                                            {children}
-                                        </CodeBlock>
-                                    ),
+                                        ...props
+                                    }) => {
+                                        const isCodeBlock =
+                                            Boolean(
+                                                className
+                                            );
 
-                                    p: ({ children }) => (
+                                        /* -----------------------------
+                                           INLINE CODE
+                                        ----------------------------- */
+
+                                        if (
+                                            !isCodeBlock
+                                        ) {
+                                            return (
+                                                <code
+                                                    className="inline-code"
+                                                    {...props}
+                                                >
+                                                    {children}
+                                                </code>
+                                            );
+                                        }
+
+                                        /* -----------------------------
+                                           CODE BLOCK
+                                        ----------------------------- */
+
+                                        return (
+                                            <CodeBlock
+                                                className={
+                                                    className
+                                                }
+                                            >
+                                                {children}
+                                            </CodeBlock>
+                                        );
+                                    },
+
+                                    /* ---------------------------------
+                                       PARAGRAPH
+                                    --------------------------------- */
+
+                                    p: ({
+                                        children,
+                                    }) => (
                                         <p className="markdown-paragraph">
                                             {children}
                                         </p>
                                     ),
 
-                                    h1: ({ children }) => (
+                                    /* ---------------------------------
+                                       HEADINGS
+                                    --------------------------------- */
+
+                                    h1: ({
+                                        children,
+                                    }) => (
                                         <h1 className="markdown-heading">
                                             {children}
                                         </h1>
                                     ),
 
-                                    h2: ({ children }) => (
+                                    h2: ({
+                                        children,
+                                    }) => (
                                         <h2 className="markdown-heading">
                                             {children}
                                         </h2>
                                     ),
 
-                                    h3: ({ children }) => (
+                                    h3: ({
+                                        children,
+                                    }) => (
                                         <h3 className="markdown-heading">
                                             {children}
                                         </h3>
                                     ),
 
-                                    ul: ({ children }) => (
+                                    /* ---------------------------------
+                                       LISTS
+                                    --------------------------------- */
+
+                                    ul: ({
+                                        children,
+                                    }) => (
                                         <ul className="markdown-list">
                                             {children}
                                         </ul>
                                     ),
 
-                                    ol: ({ children }) => (
+                                    ol: ({
+                                        children,
+                                    }) => (
                                         <ol className="markdown-list">
                                             {children}
                                         </ol>
                                     ),
 
-                                    li: ({ children }) => (
+                                    li: ({
+                                        children,
+                                    }) => (
                                         <li className="markdown-list-item">
                                             {children}
                                         </li>
@@ -255,7 +465,10 @@ const Message = ({
                                 {message.content}
                             </ReactMarkdown>
 
-                            {/* Copy entire AI response */}
+                            {/* =====================================
+                                COPY ENTIRE AI RESPONSE
+                            ===================================== */}
+
                             <div className="message-actions">
                                 <button
                                     type="button"
