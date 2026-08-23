@@ -44,27 +44,32 @@ const getChatTitle = (chatMessages: ChatMessage[]) => {
 const ChatLayout = () => {
     const { user, logout } = useAuth();
 
-    // الرسائل الموجودة في الشات المفتوح حاليًا
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    // =========================================================
+    // STATE
+    // =========================================================
 
-    // قائمة الشاتات الموجودة في Sidebar
-    const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
+    const [messages, setMessages] = useState<ChatMessage[]>(
+        []
+    );
 
-    // ID الشات المفتوح حاليًا
-    const [activeChatId, setActiveChatId] = useState<string | null>(() => {
+    const [chatSessions, setChatSessions] = useState<
+        ChatSession[]
+    >([]);
+
+    const [activeChatId, setActiveChatId] = useState<
+        string | null
+    >(() => {
         return localStorage.getItem("activeChatId");
     });
 
-    // Loading عند جلب الشاتات
     const [loading, setLoading] = useState(true);
 
-    // Sending أثناء انتظار Gemini
     const [sending, setSending] = useState(false);
 
-    // فتح وإغلاق Sidebar
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    // Sidebar open / close
+    const [isSidebarOpen, setIsSidebarOpen] =
+        useState(true);
 
-    // AbortController لإيقاف الطلب
     const abortControllerRef =
         useRef<AbortController | null>(null);
 
@@ -81,46 +86,76 @@ const ChatLayout = () => {
 
                 const sessions = response.data || [];
 
-                const formattedSessions = sessions.map(
-                    (session: any) => ({
+                const formattedSessions =
+                    sessions.map((session: any) => ({
                         id: session._id,
+
                         title: getChatTitle(
                             session.messages || []
                         ),
-                        messages: session.messages || [],
-                        updatedAt: session.updatedAt,
-                    })
-                );
+
+                        messages:
+                            session.messages || [],
+
+                        updatedAt:
+                            session.updatedAt,
+                    }));
 
                 setChatSessions(formattedSessions);
 
-                // افتح أول شات تلقائيًا
+                // =================================================
+                // OPEN SAVED CHAT
+                // =================================================
+
                 if (formattedSessions.length > 0) {
-    const savedChatId = localStorage.getItem("activeChatId");
+                    const savedChatId =
+                        localStorage.getItem(
+                            "activeChatId"
+                        );
 
-    const savedChat = formattedSessions.find(
-        (session: ChatSession) => session.id === savedChatId
-    );
+                    const savedChat =
+                        formattedSessions.find(
+                            (
+                                session: ChatSession
+                            ) =>
+                                session.id ===
+                                savedChatId
+                        );
 
-    if (savedChat) {
-        setActiveChatId(savedChat.id);
-        setMessages(savedChat.messages);
-    } else {
-        const firstChat = formattedSessions[0];
+                    if (savedChat) {
+                        setActiveChatId(
+                            savedChat.id
+                        );
 
-        setActiveChatId(firstChat.id);
-        setMessages(firstChat.messages);
+                        setMessages(
+                            savedChat.messages
+                        );
+                    } else {
+                        const firstChat =
+                            formattedSessions[0];
 
-        localStorage.setItem(
-            "activeChatId",
-            firstChat.id
-        );
-    }
-} else {
-    setActiveChatId(null);
-    setMessages([]);
-    localStorage.removeItem("activeChatId");
-}
+                        setActiveChatId(
+                            firstChat.id
+                        );
+
+                        setMessages(
+                            firstChat.messages
+                        );
+
+                        localStorage.setItem(
+                            "activeChatId",
+                            firstChat.id
+                        );
+                    }
+                } else {
+                    setActiveChatId(null);
+
+                    setMessages([]);
+
+                    localStorage.removeItem(
+                        "activeChatId"
+                    );
+                }
             } catch (error) {
                 console.error(
                     "Failed to load chat sessions:",
@@ -150,70 +185,75 @@ const ChatLayout = () => {
     // =========================================================
     // NEW CHAT
     // =========================================================
-    // هذا هو المكان الذي سألت عنه
-    // handleNewChat موجود داخل ChatLayout
 
     const handleNewChat = () => {
-        // نمسح الرسائل من الشاشة
         setMessages([]);
 
-        // null يعني أنه لا يوجد Chat موجود في MongoDB
-        // لسه، وسيتم إنشاء Chat جديد عند إرسال أول رسالة
         setActiveChatId(null);
-        localStorage.removeItem("activeChatId");
+
+        localStorage.removeItem(
+            "activeChatId"
+        );
+
+        // على الموبايل نسكر الـ Sidebar
+        if (window.innerWidth <= 768) {
+            setIsSidebarOpen(false);
+        }
     };
 
     // =========================================================
     // SELECT EXISTING CHAT
     // =========================================================
 
-    const handleSelectChat = (chatId: string) => {
-    const selectedSession = chatSessions.find(
-        (session: ChatSession) => session.id === chatId
-    );
+    const handleSelectChat = (
+        chatId: string
+    ) => {
+        const selectedSession =
+            chatSessions.find(
+                (session: ChatSession) =>
+                    session.id === chatId
+            );
 
-    if (!selectedSession) return;
+        if (!selectedSession) {
+            return;
+        }
 
-    setActiveChatId(chatId);
-    setMessages(selectedSession.messages);
+        setActiveChatId(chatId);
 
-    localStorage.setItem(
-        "activeChatId",
-        chatId
-    );
-};
+        setMessages(
+            selectedSession.messages
+        );
+
+        localStorage.setItem(
+            "activeChatId",
+            chatId
+        );
+
+        // على الموبايل نسكر الـ Sidebar
+        if (window.innerWidth <= 768) {
+            setIsSidebarOpen(false);
+        }
+    };
 
     // =========================================================
     // DELETE CHAT
     // =========================================================
 
-    const handleDeleteChat = async (chatId: string) => {
-        const chatToDelete = chatSessions.find(
-            (session) => session.id === chatId
-        );
+    const handleDeleteChat = async (
+        chatId: string
+    ) => {
+        const chatToDelete =
+            chatSessions.find(
+                (session) =>
+                    session.id === chatId
+            );
 
         if (!chatToDelete) {
             return;
         }
 
         try {
-            // =================================================
-            // DELETE FROM BACKEND
-            // =================================================
-
-            // Backend:
-            // DELETE /api/chat/:chatId
-            //
-            // والـbackend يقوم بـ:
-            // 1. التأكد أن الشات ملك للمستخدم
-            // 2. حذف الصور من Cloudinary
-            // 3. حذف Chat من MongoDB
-
             await deleteChat(chatId);
-
-            // =================================================
-            // REMOVE CHAT FROM FRONTEND STATE
-            // =================================================
 
             const remainingSessions =
                 chatSessions.filter(
@@ -221,16 +261,21 @@ const ChatLayout = () => {
                         session.id !== chatId
                 );
 
-            setChatSessions(remainingSessions);
+            setChatSessions(
+                remainingSessions
+            );
 
             // =================================================
-            // IF DELETED CHAT IS CURRENT CHAT
+            // IF CURRENT CHAT WAS DELETED
             // =================================================
 
             if (activeChatId === chatId) {
-                // إذا بقي عندنا شاتات
-                if (remainingSessions.length > 0) {
-                    const nextSession = remainingSessions[0];
+                if (
+                    remainingSessions.length >
+                    0
+                ) {
+                    const nextSession =
+                        remainingSessions[0];
 
                     setActiveChatId(
                         nextSession.id
@@ -244,14 +289,14 @@ const ChatLayout = () => {
                         "activeChatId",
                         nextSession.id
                     );
-
                 } else {
-                    // ما بقي أي Chat
                     setActiveChatId(null);
 
                     setMessages([]);
 
-                    localStorage.removeItem("activeChatId");
+                    localStorage.removeItem(
+                        "activeChatId"
+                    );
                 }
             }
         } catch (error) {
@@ -278,7 +323,9 @@ const ChatLayout = () => {
                 );
 
             if (refreshToken) {
-                await logoutUser(refreshToken);
+                await logoutUser(
+                    refreshToken
+                );
             }
         } catch (error) {
             console.error(
@@ -298,7 +345,6 @@ const ChatLayout = () => {
         prompt: string,
         images: File[]
     ) => {
-        // لا ترسل شيء إذا ما في نص ولا صور
         if (
             !prompt.trim() &&
             images.length === 0
@@ -327,21 +373,26 @@ const ChatLayout = () => {
                 URL.createObjectURL(image)
             );
 
-        // الرسالة المؤقتة التي تظهر فورًا
         const userMessage: ChatMessage = {
             role: "user",
+
             content: prompt,
 
-            ...(previewImageUrls.length > 0 && {
-                images: previewImageUrls.map(
-                    (url) => ({
-                        url,
-                    })
-                ),
+            ...(previewImageUrls.length >
+                0 && {
+                images:
+                    previewImageUrls.map(
+                        (url) => ({
+                            url,
+                        })
+                    ),
             }),
         };
 
-        // نظهر رسالة المستخدم فورًا
+        // =====================================================
+        // SHOW USER MESSAGE
+        // =====================================================
+
         const nextMessages = [
             ...messages,
             userMessage,
@@ -354,25 +405,36 @@ const ChatLayout = () => {
         // =====================================================
 
         try {
-            const response = await sendMessage(
-                prompt,
-                images,
-                activeChatId || undefined,
-                controller.signal
-            );
+            const response =
+                await sendMessage(
+                    prompt,
+                    images,
+                    activeChatId ||
+                        undefined,
+                    controller.signal
+                );
 
             const responseData =
                 response.data;
 
-            // Chat ID الجديد أو الحالي
+            // =================================================
+            // CHAT ID
+            // =================================================
+
             const newChatId =
                 responseData.chatId;
 
-            // رد Gemini
+            // =================================================
+            // AI RESPONSE
+            // =================================================
+
             const aiResponseText =
                 responseData.response;
 
-            // الصور التي رفعها backend إلى Cloudinary
+            // =================================================
+            // CLOUDINARY IMAGES
+            // =================================================
+
             const cloudinaryImages =
                 responseData.images || [];
 
@@ -380,31 +442,42 @@ const ChatLayout = () => {
             // REVOKE LOCAL PREVIEW URLS
             // =================================================
 
-            previewImageUrls.forEach((url) => {
-                URL.revokeObjectURL(url);
-            });
+            previewImageUrls.forEach(
+                (url) => {
+                    URL.revokeObjectURL(
+                        url
+                    );
+                }
+            );
 
             // =================================================
-            // USER MESSAGE SAVED VERSION
+            // SAVED USER MESSAGE
             // =================================================
 
-            const savedUserMessage: ChatMessage = {
-                role: "user",
-                content: prompt,
+            const savedUserMessage: ChatMessage =
+                {
+                    role: "user",
 
-                ...(cloudinaryImages.length > 0 && {
-                    images: cloudinaryImages,
-                }),
-            };
+                    content: prompt,
+
+                    ...(cloudinaryImages.length >
+                        0 && {
+                        images:
+                            cloudinaryImages,
+                    }),
+                };
 
             // =================================================
             // AI MESSAGE
             // =================================================
 
-            const assistantMessage: ChatMessage = {
-                role: "assistant",
-                content: aiResponseText,
-            };
+            const assistantMessage: ChatMessage =
+                {
+                    role: "assistant",
+
+                    content:
+                        aiResponseText,
+                };
 
             // =================================================
             // FINAL MESSAGES
@@ -416,13 +489,17 @@ const ChatLayout = () => {
                 assistantMessage,
             ];
 
-            setMessages(finalMessages);
+            setMessages(
+                finalMessages
+            );
 
             // =================================================
             // SET ACTIVE CHAT
             // =================================================
 
-            setActiveChatId(newChatId);
+            setActiveChatId(
+                newChatId
+            );
 
             localStorage.setItem(
                 "activeChatId",
@@ -433,53 +510,56 @@ const ChatLayout = () => {
             // UPDATE SIDEBAR
             // =================================================
 
-            setChatSessions((prevSessions) => {
-                const existingIndex =
-                    prevSessions.findIndex(
-                        (session) =>
-                            session.id ===
-                            newChatId
-                    );
+            setChatSessions(
+                (prevSessions) => {
+                    const existingIndex =
+                        prevSessions.findIndex(
+                            (session) =>
+                                session.id ===
+                                newChatId
+                        );
 
-                const updatedSession: ChatSession = {
-                    id: newChatId,
+                    const updatedSession: ChatSession =
+                        {
+                            id: newChatId,
 
-                    title: getChatTitle(
-                        finalMessages
-                    ),
+                            title: getChatTitle(
+                                finalMessages
+                            ),
 
-                    messages: finalMessages,
-                };
+                            messages:
+                                finalMessages,
+                        };
 
-                // =============================================
-                // CHAT ALREADY EXISTS
-                // =============================================
+                    // Chat موجود
+                    if (
+                        existingIndex >= 0
+                    ) {
+                        const updated = [
+                            ...prevSessions,
+                        ];
 
-                if (existingIndex >= 0) {
-                    const updated = [
+                        updated[
+                            existingIndex
+                        ] =
+                            updatedSession;
+
+                        return updated;
+                    }
+
+                    // Chat جديد
+                    return [
+                        updatedSession,
                         ...prevSessions,
                     ];
-
-                    updated[existingIndex] =
-                        updatedSession;
-
-                    return updated;
                 }
-
-                // =============================================
-                // NEW CHAT
-                // =============================================
-
-                return [
-                    updatedSession,
-                    ...prevSessions,
-                ];
-            });
+            );
         } catch (error: any) {
             if (
                 error.name ===
                     "CanceledError" ||
-                error.name === "AbortError"
+                error.name ===
+                    "AbortError"
             ) {
                 console.log(
                     "🛑 تم إيقاف البحث."
@@ -503,7 +583,9 @@ const ChatLayout = () => {
     // =========================================================
 
     const handleStop = () => {
-        if (abortControllerRef.current) {
+        if (
+            abortControllerRef.current
+        ) {
             abortControllerRef.current.abort();
 
             setSending(false);
@@ -515,11 +597,18 @@ const ChatLayout = () => {
     // =========================================================
 
     const formattedSidebarSessions =
-        chatSessions.map((session) => ({
-            id: session.id,
-            title: session.title || "New Chat",
-            messages: session.messages,
-        }));
+        chatSessions.map(
+            (session) => ({
+                id: session.id,
+
+                title:
+                    session.title ||
+                    "New Chat",
+
+                messages:
+                    session.messages,
+            })
+        );
 
     // =========================================================
     // UI
@@ -527,6 +616,11 @@ const ChatLayout = () => {
 
     return (
         <div className="chat-layout">
+
+            {/* =================================================
+                SIDEBAR
+            ================================================= */}
+
             <Sidebar
                 user={user}
                 chatSessions={
@@ -535,7 +629,9 @@ const ChatLayout = () => {
                 activeChatId={
                     activeChatId || ""
                 }
-                isOpen={isSidebarOpen}
+                isOpen={
+                    isSidebarOpen
+                }
                 onToggle={() =>
                     setIsSidebarOpen(
                         !isSidebarOpen
@@ -550,16 +646,40 @@ const ChatLayout = () => {
                 onDeleteChat={
                     handleDeleteChat
                 }
-                onLogout={handleLogout}
+                onLogout={
+                    handleLogout
+                }
             />
 
+            {/* =================================================
+                MOBILE OVERLAY
+            ================================================= */}
+
+            {isSidebarOpen && (
+                <div
+                    className="mobile-sidebar-overlay"
+                    onClick={() =>
+                        setIsSidebarOpen(
+                            false
+                        )
+                    }
+                    aria-hidden="true"
+                />
+            )}
+
+            {/* =================================================
+                MAIN
+            ================================================= */}
+
             <main className="chat-main">
-                {/* =========================================
+
+                {/* =============================================
                     OPEN SIDEBAR BUTTON
-                ========================================= */}
+                ============================================= */}
 
                 {!isSidebarOpen && (
                     <button
+                        type="button"
                         onClick={() =>
                             setIsSidebarOpen(
                                 true
@@ -589,33 +709,48 @@ const ChatLayout = () => {
                     </button>
                 )}
 
-                {/* =========================================
+                {/* =============================================
                     HEADER
-                ========================================= */}
+                ============================================= */}
 
                 <ChatHeader
-                    title={activeChatTitle}
+                    title={
+                        activeChatTitle
+                    }
                 />
 
-                {/* =========================================
+                {/* =============================================
                     MESSAGES
-                ========================================= */}
+                ============================================= */}
 
                 <MessageList
-                    messages={messages}
-                    loading={loading}
-                    sending={sending}
+                    messages={
+                        messages
+                    }
+                    loading={
+                        loading
+                    }
+                    sending={
+                        sending
+                    }
                 />
 
-                {/* =========================================
+                {/* =============================================
                     INPUT
-                ========================================= */}
+                ============================================= */}
 
                 <ChatInput
-                    onSend={handleSendMessage}
-                    onStop={handleStop}
-                    sending={sending}
+                    onSend={
+                        handleSendMessage
+                    }
+                    onStop={
+                        handleStop
+                    }
+                    sending={
+                        sending
+                    }
                 />
+
             </main>
         </div>
     );
