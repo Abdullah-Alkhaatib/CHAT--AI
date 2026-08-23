@@ -42,7 +42,15 @@
 
     text-align: start;
 
+    white-space: pre-wrap;
+
+    word-break: break-word;
+
     overflow-wrap: anywhere;
+
+    tab-size: 4;
+
+    -moz-tab-size: 4;
 
     box-sizing: border-box;
 }
@@ -54,6 +62,10 @@
 
 .user-content .markdown-paragraph {
     margin: 0 0 12px;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
 }
 
 .user-content .markdown-paragraph:last-child {
@@ -101,6 +113,8 @@
     text-align: start;
 
     overflow-wrap: anywhere;
+
+    word-break: break-word;
 }
 
 
@@ -110,10 +124,33 @@
 
 .markdown-paragraph {
     margin: 0 0 18px;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
 }
 
 .markdown-paragraph:last-child {
     margin-bottom: 0;
+}
+
+
+/* =========================================================
+   LINKS
+========================================================= */
+
+.markdown-link {
+    color: #58a6ff;
+
+    text-decoration: underline;
+
+    text-underline-offset: 2px;
+
+    word-break: break-all;
+}
+
+.markdown-link:hover {
+    color: #79b8ff;
 }
 
 
