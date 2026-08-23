@@ -28,9 +28,6 @@ const CodeBlock = ({
     const [copied, setCopied] = useState(false);
 
     const code = String(children).replace(/\n$/, "");
-    const code = Array.isArray(children)
-        ? children.join("")
-        : String(children ?? "").replace(/\n$/, "");
 
     const languageMatch =
         /language-([\w-]+)/.exec(className || "");
@@ -182,16 +179,6 @@ const Message = ({
                                 ]}
                                 components={{
                                     /* ---------------------------------
-                                       PRE
-                                    --------------------------------- */
-
-                                    pre: ({
-                                        children,
-                                    }) => (
-                                        <>{children}</>
-                                    ),
-
-                                    /* ---------------------------------
                                        INLINE / BLOCK CODE
                                     --------------------------------- */
 
@@ -204,12 +191,6 @@ const Message = ({
                                             Boolean(
                                                 className
                                             );
-                                            ) ||
-                                            (typeof children ===
-                                                "string" &&
-                                                children.includes(
-                                                    "\n"
-                                                ));
 
                                         /* -----------------------------
                                            INLINE CODE
@@ -253,24 +234,6 @@ const Message = ({
                                         <p className="markdown-paragraph">
                                             {children}
                                         </p>
-                                    ),
-
-                                    /* ---------------------------------
-                                       LINKS
-                                    --------------------------------- */
-
-                                    a: ({
-                                        href,
-                                        children,
-                                    }) => (
-                                        <a
-                                            href={href}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="markdown-link"
-                                        >
-                                            {children}
-                                        </a>
                                     ),
 
                                     /* ---------------------------------
@@ -385,16 +348,6 @@ const Message = ({
                                 ]}
                                 components={{
                                     /* ---------------------------------
-                                       PRE
-                                    --------------------------------- */
-
-                                    pre: ({
-                                        children,
-                                    }) => (
-                                        <>{children}</>
-                                    ),
-
-                                    /* ---------------------------------
                                        INLINE / BLOCK CODE
                                     --------------------------------- */
 
@@ -407,12 +360,6 @@ const Message = ({
                                             Boolean(
                                                 className
                                             );
-                                            ) ||
-                                            (typeof children ===
-                                                "string" &&
-                                                children.includes(
-                                                    "\n"
-                                                ));
 
                                         /* -----------------------------
                                            INLINE CODE
@@ -456,24 +403,6 @@ const Message = ({
                                         <p className="markdown-paragraph">
                                             {children}
                                         </p>
-                                    ),
-
-                                    /* ---------------------------------
-                                       LINKS
-                                    --------------------------------- */
-
-                                    a: ({
-                                        href,
-                                        children,
-                                    }) => (
-                                        <a
-                                            href={href}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="markdown-link"
-                                        >
-                                            {children}
-                                        </a>
                                     ),
 
                                     /* ---------------------------------
