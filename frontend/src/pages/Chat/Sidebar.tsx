@@ -1,3 +1,9 @@
+import {
+    useEffect,
+    useRef,
+    useState,
+} from "react";
+
 import { User } from "../../types/auth.types";
 
 import "./Sidebar.css";
@@ -30,6 +36,11 @@ interface SidebarProps {
 
     onDeleteChat: (chatId: string) => void;
 
+    onEditChat: (
+        chatId: string,
+        title: string
+    ) => Promise<void>;
+
     onLogout: () => void;
 }
 
@@ -42,11 +53,125 @@ const Sidebar = ({
     onSelectChat,
     onNewChat,
     onDeleteChat,
+    onEditChat,
     onLogout,
 }: SidebarProps) => {
 
     const userInitial =
         user?.name?.charAt(0)?.toUpperCase() || "A";
+
+    const [editingChatId, setEditingChatId] =
+        useState<string | null>(null);
+
+    const [editingTitle, setEditingTitle] =
+        useState("");
+
+    const editInputRef =
+        useRef<HTMLInputElement | null>(null);
+
+
+    // =========================================================
+    // FOCUS EDIT INPUT
+    // =========================================================
+
+    useEffect(() => {
+        if (editingChatId) {
+            editInputRef.current?.focus();
+
+            editInputRef.current?.select();
+        }
+    }, [editingChatId]);
+
+
+    // =========================================================
+    // START EDIT
+    // =========================================================
+
+    const handleStartEdit = (
+        event: React.MouseEvent,
+        session: ChatSessionSummary
+    ) => {
+        event.stopPropagation();
+
+        setEditingChatId(session.id);
+
+        setEditingTitle(session.title);
+    };
+
+
+    // =========================================================
+    // CANCEL EDIT
+    // =========================================================
+
+    const handleCancelEdit = () => {
+        setEditingChatId(null);
+
+        setEditingTitle("");
+    };
+
+
+    // =========================================================
+    // SAVE EDIT
+    // =========================================================
+
+    const handleSaveEdit = async (
+        event?: React.FormEvent
+    ) => {
+        event?.preventDefault();
+
+        if (!editingChatId) {
+            return;
+        }
+
+        const trimmedTitle =
+            editingTitle.trim();
+
+        if (!trimmedTitle) {
+            return;
+        }
+
+        try {
+            await onEditChat(
+                editingChatId,
+                trimmedTitle
+            );
+
+            setEditingChatId(null);
+
+            setEditingTitle("");
+        } catch (error) {
+            console.error(
+                "Failed to edit chat:",
+                error
+            );
+        }
+    };
+
+
+    // =========================================================
+    // KEYBOARD
+    // =========================================================
+
+    const handleEditKeyDown = (
+        event: React.KeyboardEvent<HTMLInputElement>
+    ) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+
+            handleSaveEdit();
+        }
+
+        if (event.key === "Escape") {
+            event.preventDefault();
+
+            handleCancelEdit();
+        }
+    };
+
+
+    // =========================================================
+    // RENDER
+    // =========================================================
 
     return (
         <aside
@@ -123,10 +248,9 @@ const Sidebar = ({
 
                     {chatSessions.map(
                         (session) => (
+
                             <div
-                                key={
-                                    session.id
-                                }
+                                key={session.id}
                                 className={`sidebar-chat-row ${
                                     session.id ===
                                     activeChatId
@@ -135,70 +259,225 @@ const Sidebar = ({
                                 }`}
                             >
 
-                                <button
-                                    type="button"
-                                    className={`sidebar-chat-item ${
-                                        session.id ===
-                                        activeChatId
-                                            ? "sidebar-chat-item-active"
-                                            : ""
-                                    }`}
-                                    onClick={() =>
-                                        onSelectChat(
-                                            session.id
-                                        )
-                                    }
-                                >
+                                {/* =================================================
+                                    CHAT / EDIT
+                                ================================================= */}
 
-                                    <span className="sidebar-chat-item-title">
-                                        {
-                                            session.title
+                                {editingChatId ===
+                                session.id ? (
+
+                                    <form
+                                        className="sidebar-edit-form"
+                                        onSubmit={
+                                            handleSaveEdit
                                         }
-                                    </span>
-
-                                </button>
-
-
-                                <button
-                                    type="button"
-                                    className="sidebar-delete-chat-button"
-                                    onClick={(
-                                        event
-                                    ) => {
-                                        event.stopPropagation();
-
-                                        onDeleteChat(
-                                            session.id
-                                        );
-                                    }}
-                                    title="Delete chat"
-                                    aria-label={`Delete ${session.title}`}
-                                >
-
-                                    <svg
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
+                                        onClick={(
+                                            event
+                                        ) =>
+                                            event.stopPropagation()
+                                        }
                                     >
-                                        <polyline points="3 6 5 6 21 6" />
 
-                                        <path d="M19 6l-1 14H6L5 6" />
+                                        <input
+                                            ref={
+                                                editInputRef
+                                            }
+                                            type="text"
+                                            className="sidebar-edit-input"
+                                            value={
+                                                editingTitle
+                                            }
+                                            maxLength={100}
+                                            onChange={(
+                                                event
+                                            ) =>
+                                                setEditingTitle(
+                                                    event
+                                                        .target
+                                                        .value
+                                                )
+                                            }
+                                            onKeyDown={
+                                                handleEditKeyDown
+                                            }
+                                            aria-label="Edit chat title"
+                                        />
 
-                                        <path d="M10 11v5" />
+                                        <button
+                                            type="submit"
+                                            className="sidebar-save-edit-button"
+                                            title="Save"
+                                            aria-label="Save chat title"
+                                        >
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <polyline points="20 6 9 17 4 12" />
+                                            </svg>
+                                        </button>
 
-                                        <path d="M14 11v5" />
 
-                                        <path d="M9 6V4h6v2" />
-                                    </svg>
+                                        <button
+                                            type="button"
+                                            className="sidebar-cancel-edit-button"
+                                            onClick={(
+                                                event
+                                            ) => {
+                                                event.stopPropagation();
 
-                                </button>
+                                                handleCancelEdit();
+                                            }}
+                                            title="Cancel"
+                                            aria-label="Cancel editing"
+                                        >
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <line
+                                                    x1="18"
+                                                    y1="6"
+                                                    x2="6"
+                                                    y2="18"
+                                                />
+
+                                                <line
+                                                    x1="6"
+                                                    y1="6"
+                                                    x2="18"
+                                                    y2="18"
+                                                />
+                                            </svg>
+                                        </button>
+
+                                    </form>
+
+                                ) : (
+
+                                    <>
+                                        <button
+                                            type="button"
+                                            className={`sidebar-chat-item ${
+                                                session.id ===
+                                                activeChatId
+                                                    ? "sidebar-chat-item-active"
+                                                    : ""
+                                            }`}
+                                            onClick={() =>
+                                                onSelectChat(
+                                                    session.id
+                                                )
+                                            }
+                                        >
+
+                                            <span className="sidebar-chat-item-title">
+                                                {
+                                                    session.title
+                                                }
+                                            </span>
+
+                                        </button>
+
+
+                                        {/* =================================================
+                                            EDIT BUTTON
+                                        ================================================= */}
+
+                                        <button
+                                            type="button"
+                                            className="sidebar-edit-chat-button"
+                                            onClick={(
+                                                event
+                                            ) =>
+                                                handleStartEdit(
+                                                    event,
+                                                    session
+                                                )
+                                            }
+                                            title="Edit chat"
+                                            aria-label={`Edit ${session.title}`}
+                                        >
+
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path d="M12 20h9" />
+
+                                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                                            </svg>
+
+                                        </button>
+
+
+                                        {/* =================================================
+                                            DELETE BUTTON
+                                        ================================================= */}
+
+                                        <button
+                                            type="button"
+                                            className="sidebar-delete-chat-button"
+                                            onClick={(
+                                                event
+                                            ) => {
+                                                event.stopPropagation();
+
+                                                onDeleteChat(
+                                                    session.id
+                                                );
+                                            }}
+                                            title="Delete chat"
+                                            aria-label={`Delete ${session.title}`}
+                                        >
+
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <polyline points="3 6 5 6 21 6" />
+
+                                                <path d="M19 6l-1 14H6L5 6" />
+
+                                                <path d="M10 11v5" />
+
+                                                <path d="M14 11v5" />
+
+                                                <path d="M9 6V4h6v2" />
+                                            </svg>
+
+                                        </button>
+
+                                    </>
+
+                                )}
 
                             </div>
+
                         )
                     )}
 

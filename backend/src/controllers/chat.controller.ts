@@ -217,3 +217,73 @@ export const deleteChat = async (
         });
     }
 };
+
+export const editChat = async (req: AuthRequest, res: Response) => {
+    try {
+        if (!req.user || !req.user.userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authenticated",
+            });
+        }
+
+        const { chatId } = req.params;
+        const { title } = req.body;
+
+        if (!chatId || chatId.length !== 24) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid chat ID",
+            });
+        }
+
+        if (!title || typeof title !== "string" || !title.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Chat title is required",
+            });
+        }
+
+        const trimmedTitle = title.trim();
+
+        if (trimmedTitle.length > 100) {
+            return res.status(400).json({
+                success: false,
+                message: "Chat title cannot exceed 100 characters",
+            });
+        }
+
+        const chatDoc = await Chat.findOne({
+            _id: chatId,
+            userId: req.user.userId,
+        });
+
+        if (!chatDoc) {
+            return res.status(404).json({
+                success: false,
+                message: "Chat not found",
+            });
+        }
+
+        chatDoc.title = trimmedTitle;
+
+        await chatDoc.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Chat title updated successfully",
+            data: {
+                chatId: chatDoc._id,
+                title: chatDoc.title,
+            },
+        });
+
+    } catch (error) {
+        console.error("Edit chat error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: (error as Error).message,
+        });
+    }
+}

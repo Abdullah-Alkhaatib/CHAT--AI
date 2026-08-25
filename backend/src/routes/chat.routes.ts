@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { chat, getChat, deleteChat } from "../controllers/chat.controller";
+import { chat, getChat, deleteChat, editChat } from "../controllers/chat.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
 import upload from "../middleware/upload.middleware";
 
@@ -10,5 +10,7 @@ router.post("/", authMiddleware, upload.array("image", 10), chat);
 router.get("/", authMiddleware, getChat);
 
 router.delete( "/:chatId", authMiddleware, deleteChat );
+
+router.patch("/:chatId", authMiddleware, editChat);
 
 export default router;

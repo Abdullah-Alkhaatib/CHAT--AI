@@ -1,4 +1,9 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import {
+    useEffect,
+    useState,
+    useRef,
+    useMemo,
+} from "react";
 
 import Sidebar from "./Sidebar";
 import ChatHeader from "./ChatHeader";
@@ -9,6 +14,7 @@ import {
     getChat,
     sendMessage,
     deleteChat,
+    editChat,
 } from "../../services/chat.service";
 
 import { logoutUser } from "../../services/auth.service";
@@ -20,98 +26,141 @@ import "./ChatLayout.css";
 
 interface ChatSession {
     id: string;
+
     title?: string;
+
     messages: ChatMessage[];
+
     updatedAt?: string;
 }
 
-const getChatTitle = (chatMessages: ChatMessage[]) => {
-    const firstUserPrompt = chatMessages.find(
-        (message) => message.role === "user"
-    )?.content;
+
+const getChatTitle = (
+    chatMessages: ChatMessage[]
+) => {
+    const firstUserPrompt =
+        chatMessages.find(
+            (message) =>
+                message.role === "user"
+        )?.content;
 
     if (!firstUserPrompt) {
         return "New Chat";
     }
 
-    const trimmed = firstUserPrompt.trim();
+    const trimmed =
+        firstUserPrompt.trim();
 
     return trimmed.length > 28
         ? `${trimmed.slice(0, 28)}...`
         : trimmed;
 };
 
+
 const ChatLayout = () => {
+
     const { user, logout } = useAuth();
+
 
     // =========================================================
     // STATE
     // =========================================================
 
-    const [messages, setMessages] = useState<ChatMessage[]>(
-        []
-    );
+    const [messages, setMessages] =
+        useState<ChatMessage[]>([]);
 
-    const [chatSessions, setChatSessions] = useState<
-        ChatSession[]
-    >([]);
+    const [chatSessions, setChatSessions] =
+        useState<ChatSession[]>([]);
 
-    const [activeChatId, setActiveChatId] = useState<
-        string | null
-    >(() => {
-        return localStorage.getItem("activeChatId");
-    });
+    const [activeChatId, setActiveChatId] =
+        useState<string | null>(() => {
+            return localStorage.getItem(
+                "activeChatId"
+            );
+        });
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] =
+        useState(true);
 
-    const [sending, setSending] = useState(false);
+    const [sending, setSending] =
+        useState(false);
 
-    // Sidebar open / close
     const [isSidebarOpen, setIsSidebarOpen] =
         useState(true);
 
     const abortControllerRef =
         useRef<AbortController | null>(null);
 
+
     // =========================================================
     // GET ALL CHATS
     // =========================================================
 
     useEffect(() => {
+
         const fetchSessions = async () => {
+
             setLoading(true);
 
             try {
-                const response = await getChat();
 
-                const sessions = response.data || [];
+                const response =
+                    await getChat();
+
+                const sessions =
+                    response.data || [];
+
 
                 const formattedSessions =
-                    sessions.map((session: any) => ({
-                        id: session._id,
+                    sessions.map(
+                        (session: any) => ({
+                            id: session._id,
 
-                        title: getChatTitle(
-                            session.messages || []
-                        ),
+                            /*
+                             * مهم:
+                             * نستخدم title المحفوظ
+                             * في MongoDB.
+                             *
+                             * وإذا الشات قديم وما عنده title
+                             * نستخدم أول رسالة.
+                             */
 
-                        messages:
-                            session.messages || [],
+                            title:
+                                session.title ||
+                                getChatTitle(
+                                    session.messages ||
+                                        []
+                                ),
 
-                        updatedAt:
-                            session.updatedAt,
-                    }));
+                            messages:
+                                session.messages ||
+                                [],
 
-                setChatSessions(formattedSessions);
+                            updatedAt:
+                                session.updatedAt,
+                        })
+                    );
+
+
+                setChatSessions(
+                    formattedSessions
+                );
+
 
                 // =================================================
                 // OPEN SAVED CHAT
                 // =================================================
 
-                if (formattedSessions.length > 0) {
+                if (
+                    formattedSessions.length >
+                    0
+                ) {
+
                     const savedChatId =
                         localStorage.getItem(
                             "activeChatId"
                         );
+
 
                     const savedChat =
                         formattedSessions.find(
@@ -122,7 +171,9 @@ const ChatLayout = () => {
                                 savedChatId
                         );
 
+
                     if (savedChat) {
+
                         setActiveChatId(
                             savedChat.id
                         );
@@ -130,7 +181,9 @@ const ChatLayout = () => {
                         setMessages(
                             savedChat.messages
                         );
+
                     } else {
+
                         const firstChat =
                             formattedSessions[0];
 
@@ -147,7 +200,9 @@ const ChatLayout = () => {
                             firstChat.id
                         );
                     }
+
                 } else {
+
                     setActiveChatId(null);
 
                     setMessages([]);
@@ -156,37 +211,57 @@ const ChatLayout = () => {
                         "activeChatId"
                     );
                 }
+
             } catch (error) {
+
                 console.error(
                     "Failed to load chat sessions:",
                     error
                 );
+
             } finally {
+
                 setLoading(false);
             }
         };
 
+
         fetchSessions();
+
     }, []);
+
 
     // =========================================================
     // ACTIVE CHAT TITLE
     // =========================================================
 
-    const activeChatTitle = useMemo(() => {
-        const current = chatSessions.find(
-            (session) =>
-                session.id === activeChatId
-        );
+    const activeChatTitle =
+        useMemo(() => {
 
-        return current?.title || "New Chat";
-    }, [activeChatId, chatSessions]);
+            const current =
+                chatSessions.find(
+                    (session) =>
+                        session.id ===
+                        activeChatId
+                );
+
+            return (
+                current?.title ||
+                "New Chat"
+            );
+
+        }, [
+            activeChatId,
+            chatSessions,
+        ]);
+
 
     // =========================================================
     // NEW CHAT
     // =========================================================
 
     const handleNewChat = () => {
+
         setMessages([]);
 
         setActiveChatId(null);
@@ -195,11 +270,13 @@ const ChatLayout = () => {
             "activeChatId"
         );
 
-        // على الموبايل نسكر الـ Sidebar
+
         if (window.innerWidth <= 768) {
+
             setIsSidebarOpen(false);
         }
     };
+
 
     // =========================================================
     // SELECT EXISTING CHAT
@@ -208,15 +285,21 @@ const ChatLayout = () => {
     const handleSelectChat = (
         chatId: string
     ) => {
+
         const selectedSession =
             chatSessions.find(
-                (session: ChatSession) =>
-                    session.id === chatId
+                (
+                    session: ChatSession
+                ) =>
+                    session.id ===
+                    chatId
             );
+
 
         if (!selectedSession) {
             return;
         }
+
 
         setActiveChatId(chatId);
 
@@ -229,11 +312,13 @@ const ChatLayout = () => {
             chatId
         );
 
-        // على الموبايل نسكر الـ Sidebar
+
         if (window.innerWidth <= 768) {
+
             setIsSidebarOpen(false);
         }
     };
+
 
     // =========================================================
     // DELETE CHAT
@@ -242,40 +327,54 @@ const ChatLayout = () => {
     const handleDeleteChat = async (
         chatId: string
     ) => {
+
         const chatToDelete =
             chatSessions.find(
                 (session) =>
-                    session.id === chatId
+                    session.id ===
+                    chatId
             );
+
 
         if (!chatToDelete) {
             return;
         }
 
+
         try {
+
             await deleteChat(chatId);
+
 
             const remainingSessions =
                 chatSessions.filter(
                     (session) =>
-                        session.id !== chatId
+                        session.id !==
+                        chatId
                 );
+
 
             setChatSessions(
                 remainingSessions
             );
 
+
             // =================================================
             // IF CURRENT CHAT WAS DELETED
             // =================================================
 
-            if (activeChatId === chatId) {
+            if (
+                activeChatId === chatId
+            ) {
+
                 if (
                     remainingSessions.length >
                     0
                 ) {
+
                     const nextSession =
                         remainingSessions[0];
+
 
                     setActiveChatId(
                         nextSession.id
@@ -289,7 +388,9 @@ const ChatLayout = () => {
                         "activeChatId",
                         nextSession.id
                     );
+
                 } else {
+
                     setActiveChatId(null);
 
                     setMessages([]);
@@ -299,7 +400,9 @@ const ChatLayout = () => {
                     );
                 }
             }
+
         } catch (error) {
+
             console.error(
                 "Failed to delete chat:",
                 error
@@ -311,31 +414,98 @@ const ChatLayout = () => {
         }
     };
 
+
+    // =========================================================
+    // EDIT CHAT
+    // =========================================================
+
+    const handleEditChat = async (
+        chatId: string,
+        newTitle: string
+    ) => {
+
+        const trimmedTitle =
+            newTitle.trim();
+
+
+        if (!trimmedTitle) {
+            return;
+        }
+
+
+        try {
+
+            await editChat(
+                chatId,
+                trimmedTitle
+            );
+
+
+            setChatSessions(
+                (prevSessions) =>
+                    prevSessions.map(
+                        (session) =>
+                            session.id ===
+                            chatId
+                                ? {
+                                      ...session,
+                                      title:
+                                          trimmedTitle,
+                                  }
+                                : session
+                    )
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Failed to edit chat:",
+                error
+            );
+
+            window.alert(
+                "Failed to edit chat. Please try again."
+            );
+
+            throw error;
+        }
+    };
+
+
     // =========================================================
     // LOGOUT
     // =========================================================
 
     const handleLogout = async () => {
+
         try {
+
             const refreshToken =
                 localStorage.getItem(
                     "refreshToken"
                 );
 
+
             if (refreshToken) {
+
                 await logoutUser(
                     refreshToken
                 );
             }
+
         } catch (error) {
+
             console.error(
                 "Failed to logout:",
                 error
             );
+
         } finally {
+
             logout();
         }
     };
+
 
     // =========================================================
     // SEND MESSAGE
@@ -345,12 +515,14 @@ const ChatLayout = () => {
         prompt: string,
         images: File[]
     ) => {
+
         if (
             !prompt.trim() &&
             images.length === 0
         ) {
             return;
         }
+
 
         // =====================================================
         // ABORT CONTROLLER
@@ -364,14 +536,19 @@ const ChatLayout = () => {
 
         setSending(true);
 
+
         // =====================================================
         // LOCAL IMAGE PREVIEW
         // =====================================================
 
         const previewImageUrls =
-            images.map((image) =>
-                URL.createObjectURL(image)
+            images.map(
+                (image) =>
+                    URL.createObjectURL(
+                        image
+                    )
             );
+
 
         const userMessage: ChatMessage = {
             role: "user",
@@ -389,6 +566,7 @@ const ChatLayout = () => {
             }),
         };
 
+
         // =====================================================
         // SHOW USER MESSAGE
         // =====================================================
@@ -400,11 +578,13 @@ const ChatLayout = () => {
 
         setMessages(nextMessages);
 
+
         // =====================================================
         // SEND TO BACKEND
         // =====================================================
 
         try {
+
             const response =
                 await sendMessage(
                     prompt,
@@ -414,8 +594,10 @@ const ChatLayout = () => {
                     controller.signal
                 );
 
+
             const responseData =
                 response.data;
+
 
             // =================================================
             // CHAT ID
@@ -424,12 +606,14 @@ const ChatLayout = () => {
             const newChatId =
                 responseData.chatId;
 
+
             // =================================================
             // AI RESPONSE
             // =================================================
 
             const aiResponseText =
                 responseData.response;
+
 
             // =================================================
             // CLOUDINARY IMAGES
@@ -438,46 +622,51 @@ const ChatLayout = () => {
             const cloudinaryImages =
                 responseData.images || [];
 
+
             // =================================================
             // REVOKE LOCAL PREVIEW URLS
             // =================================================
 
             previewImageUrls.forEach(
                 (url) => {
+
                     URL.revokeObjectURL(
                         url
                     );
                 }
             );
 
+
             // =================================================
             // SAVED USER MESSAGE
             // =================================================
 
-            const savedUserMessage: ChatMessage =
-                {
-                    role: "user",
+            const savedUserMessage:
+                ChatMessage = {
+                role: "user",
 
-                    content: prompt,
+                content: prompt,
 
-                    ...(cloudinaryImages.length >
-                        0 && {
-                        images:
-                            cloudinaryImages,
-                    }),
-                };
+                ...(cloudinaryImages.length >
+                    0 && {
+                    images:
+                        cloudinaryImages,
+                }),
+            };
+
 
             // =================================================
             // AI MESSAGE
             // =================================================
 
-            const assistantMessage: ChatMessage =
-                {
-                    role: "assistant",
+            const assistantMessage:
+                ChatMessage = {
+                role: "assistant",
 
-                    content:
-                        aiResponseText,
-                };
+                content:
+                    aiResponseText,
+            };
+
 
             // =================================================
             // FINAL MESSAGES
@@ -489,9 +678,11 @@ const ChatLayout = () => {
                 assistantMessage,
             ];
 
+
             setMessages(
                 finalMessages
             );
+
 
             // =================================================
             // SET ACTIVE CHAT
@@ -506,12 +697,14 @@ const ChatLayout = () => {
                 newChatId
             );
 
+
             // =================================================
             // UPDATE SIDEBAR
             // =================================================
 
             setChatSessions(
                 (prevSessions) => {
+
                     const existingIndex =
                         prevSessions.findIndex(
                             (session) =>
@@ -519,22 +712,45 @@ const ChatLayout = () => {
                                 newChatId
                         );
 
-                    const updatedSession: ChatSession =
-                        {
-                            id: newChatId,
 
-                            title: getChatTitle(
+                    const existingSession =
+                        prevSessions.find(
+                            (session) =>
+                                session.id ===
+                                newChatId
+                        );
+
+
+                    const updatedSession:
+                        ChatSession = {
+
+                        id: newChatId,
+
+                        /*
+                         * إذا الشات موجود مسبقًا
+                         * وكان عنده title مخصص،
+                         * لا نرجع نغيّره لأول رسالة.
+                         */
+
+                        title:
+                            existingSession?.title ||
+                            getChatTitle(
                                 finalMessages
                             ),
 
-                            messages:
-                                finalMessages,
-                        };
+                        messages:
+                            finalMessages,
+                    };
 
-                    // Chat موجود
+
+                    // =================================================
+                    // CHAT موجود
+                    // =================================================
+
                     if (
                         existingIndex >= 0
                     ) {
+
                         const updated = [
                             ...prevSessions,
                         ];
@@ -547,30 +763,41 @@ const ChatLayout = () => {
                         return updated;
                     }
 
-                    // Chat جديد
+
+                    // =================================================
+                    // CHAT جديد
+                    // =================================================
+
                     return [
                         updatedSession,
                         ...prevSessions,
                     ];
                 }
             );
+
         } catch (error: any) {
+
             if (
                 error.name ===
                     "CanceledError" ||
                 error.name ===
                     "AbortError"
             ) {
+
                 console.log(
                     "🛑 تم إيقاف البحث."
                 );
+
             } else {
+
                 console.error(
                     "Failed to send message:",
                     error
                 );
             }
+
         } finally {
+
             setSending(false);
 
             abortControllerRef.current =
@@ -578,19 +805,23 @@ const ChatLayout = () => {
         }
     };
 
+
     // =========================================================
     // STOP GENERATION
     // =========================================================
 
     const handleStop = () => {
+
         if (
             abortControllerRef.current
         ) {
+
             abortControllerRef.current.abort();
 
             setSending(false);
         }
     };
+
 
     // =========================================================
     // SIDEBAR DATA
@@ -610,6 +841,7 @@ const ChatLayout = () => {
             })
         );
 
+
     // =========================================================
     // UI
     // =========================================================
@@ -623,33 +855,46 @@ const ChatLayout = () => {
 
             <Sidebar
                 user={user}
+
                 chatSessions={
                     formattedSidebarSessions
                 }
+
                 activeChatId={
                     activeChatId || ""
                 }
+
                 isOpen={
                     isSidebarOpen
                 }
+
                 onToggle={() =>
                     setIsSidebarOpen(
                         !isSidebarOpen
                     )
                 }
+
                 onSelectChat={
                     handleSelectChat
                 }
+
                 onNewChat={
                     handleNewChat
                 }
+
                 onDeleteChat={
                     handleDeleteChat
                 }
+
+                onEditChat={
+                    handleEditChat
+                }
+
                 onLogout={
                     handleLogout
                 }
             />
+
 
             {/* =================================================
                 MOBILE OVERLAY
@@ -666,6 +911,7 @@ const ChatLayout = () => {
                     aria-hidden="true"
                 />
             )}
+
 
             {/* =================================================
                 MAIN
@@ -688,6 +934,7 @@ const ChatLayout = () => {
                         className="sidebar-open-trigger-btn"
                         title="Open sidebar"
                     >
+
                         <svg
                             width="20"
                             height="20"
@@ -696,6 +943,7 @@ const ChatLayout = () => {
                             stroke="currentColor"
                             strokeWidth="2"
                         >
+
                             <rect
                                 x="3"
                                 y="3"
@@ -705,9 +953,12 @@ const ChatLayout = () => {
                             />
 
                             <path d="M9 3v18" />
+
                         </svg>
+
                     </button>
                 )}
+
 
                 {/* =============================================
                     HEADER
@@ -719,6 +970,7 @@ const ChatLayout = () => {
                     }
                 />
 
+
                 {/* =============================================
                     MESSAGES
                 ============================================= */}
@@ -727,13 +979,16 @@ const ChatLayout = () => {
                     messages={
                         messages
                     }
+
                     loading={
                         loading
                     }
+
                     sending={
                         sending
                     }
                 />
+
 
                 {/* =============================================
                     INPUT
@@ -743,15 +998,18 @@ const ChatLayout = () => {
                     onSend={
                         handleSendMessage
                     }
+
                     onStop={
                         handleStop
                     }
+
                     sending={
                         sending
                     }
                 />
 
             </main>
+
         </div>
     );
 };

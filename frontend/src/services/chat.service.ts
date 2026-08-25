@@ -47,3 +47,15 @@ export const deleteChat = async (
 
     return response.data;
 };
+
+export const editChat = async (
+    chatId: string,
+    title: string
+): Promise<any> => {
+    const response = await api.patch(
+        `/chat/${chatId}`,
+        { title }
+    );
+
+    return response.data;
+};

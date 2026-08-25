@@ -32,10 +32,6 @@
 
     -webkit-overflow-scrolling: touch;
 
-    /*
-     * أهم شيء:
-     * Sidebar فوق الـ overlay
-     */
     position: relative;
 
     z-index: 1100;
@@ -203,6 +199,8 @@
 
     width: 100%;
 
+    min-width: 0;
+
     border-radius: 7px;
 }
 
@@ -222,7 +220,7 @@
 
     width: auto;
 
-    padding: 10px 12px;
+    padding: 10px 8px 10px 12px;
 
     border: none;
 
@@ -274,21 +272,24 @@
 
 
 /* =========================================================
-   DELETE BUTTON
+   EDIT BUTTON
 ========================================================= */
 
+.sidebar-edit-chat-button,
 .sidebar-delete-chat-button {
     width: 34px;
 
     height: 34px;
 
-    margin-right: 4px;
+    margin-right: 2px;
 
     display: flex;
 
     align-items: center;
 
     justify-content: center;
+
+    flex-shrink: 0;
 
     border: none;
 
@@ -309,13 +310,38 @@
 }
 
 
-/* Desktop hover */
+/* =========================================================
+   SHOW BUTTONS ON HOVER
+========================================================= */
+
+.sidebar-chat-row:hover
+.sidebar-edit-chat-button,
 
 .sidebar-chat-row:hover
 .sidebar-delete-chat-button {
     opacity: 1;
 }
 
+
+/* =========================================================
+   EDIT HOVER
+========================================================= */
+
+.sidebar-edit-chat-button:hover {
+    background-color: rgba(
+        255,
+        255,
+        255,
+        0.08
+    );
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   DELETE HOVER
+========================================================= */
 
 .sidebar-delete-chat-button:hover {
     background-color: rgba(
@@ -326,6 +352,134 @@
     );
 
     color: #ff6b6b;
+}
+
+
+/* =========================================================
+   EDIT FORM
+========================================================= */
+
+.sidebar-edit-form {
+    width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 2px;
+
+    padding: 2px;
+}
+
+
+/* =========================================================
+   EDIT INPUT
+========================================================= */
+
+.sidebar-edit-input {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 34px;
+
+    padding: 0 9px;
+
+    border: 1px solid #4a4a4a;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    background-color: #242424;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.sidebar-edit-input:focus {
+    border-color: #6b6b6b;
+
+    background-color: #2a2a2a;
+}
+
+
+/* =========================================================
+   SAVE / CANCEL BUTTONS
+========================================================= */
+
+.sidebar-save-edit-button,
+.sidebar-cancel-edit-button {
+    width: 34px;
+
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+/* SAVE */
+
+.sidebar-save-edit-button {
+    color: #7dd3a7;
+}
+
+.sidebar-save-edit-button:hover {
+    background-color: rgba(
+        74,
+        222,
+        128,
+        0.12
+    );
+
+    color: #86efac;
+}
+
+
+/* CANCEL */
+
+.sidebar-cancel-edit-button {
+    color: #888888;
+}
+
+.sidebar-cancel-edit-button:hover {
+    background-color: rgba(
+        255,
+        255,
+        255,
+        0.08
+    );
+
+    color: #ffffff;
 }
 
 
@@ -494,12 +648,6 @@
     }
 
 
-    /*
-     * مهم:
-     * لا نغير العرض أثناء الإغلاق.
-     * فقط نحركه خارج الشاشة.
-     */
-
     .sidebar.sidebar-closed {
         transform: translateX(-100%);
 
@@ -511,10 +659,9 @@
     }
 
 
-    /*
-     * على الموبايل يظهر زر الحذف دائمًا
-     */
+    /* أزرار التعديل والحذف تظهر دائمًا على الموبايل */
 
+    .sidebar-edit-chat-button,
     .sidebar-delete-chat-button {
         opacity: 1 !important;
     }
