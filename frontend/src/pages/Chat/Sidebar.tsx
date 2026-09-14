@@ -69,11 +69,6 @@ const Sidebar = ({
     const editInputRef =
         useRef<HTMLInputElement | null>(null);
 
-
-    // =========================================================
-    // FOCUS EDIT INPUT
-    // =========================================================
-
     useEffect(() => {
         if (editingChatId) {
             editInputRef.current?.focus();
@@ -81,11 +76,6 @@ const Sidebar = ({
             editInputRef.current?.select();
         }
     }, [editingChatId]);
-
-
-    // =========================================================
-    // START EDIT
-    // =========================================================
 
     const handleStartEdit = (
         event: React.MouseEvent,
@@ -98,21 +88,11 @@ const Sidebar = ({
         setEditingTitle(session.title);
     };
 
-
-    // =========================================================
-    // CANCEL EDIT
-    // =========================================================
-
     const handleCancelEdit = () => {
         setEditingChatId(null);
 
         setEditingTitle("");
     };
-
-
-    // =========================================================
-    // SAVE EDIT
-    // =========================================================
 
     const handleSaveEdit = async (
         event?: React.FormEvent
@@ -147,11 +127,6 @@ const Sidebar = ({
         }
     };
 
-
-    // =========================================================
-    // KEYBOARD
-    // =========================================================
-
     const handleEditKeyDown = (
         event: React.KeyboardEvent<HTMLInputElement>
     ) => {
@@ -167,11 +142,6 @@ const Sidebar = ({
             handleCancelEdit();
         }
     };
-
-
-    // =========================================================
-    // RENDER
-    // =========================================================
 
     return (
         <aside

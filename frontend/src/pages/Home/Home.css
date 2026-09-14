@@ -77,7 +77,6 @@
     background: #d4d4d4;
 }
 
-/* Main Chat Area */
 .home-main {
     flex: 1;
     display: flex;
@@ -179,7 +178,6 @@
     text-align: center;
 }
 
-/* Modal Styling */
 .home-modal-overlay {
     position: fixed;
     top: 0;

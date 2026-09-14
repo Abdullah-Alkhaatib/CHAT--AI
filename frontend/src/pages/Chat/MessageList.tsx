@@ -27,10 +27,6 @@ const MessageList = ({
 
     const previousMessageCountRef = useRef(0);
 
-    /* =========================================================
-       AUTO SCROLL
-    ========================================================= */
-
     useEffect(() => {
         const scroller = scrollerRef.current;
 
@@ -43,10 +39,6 @@ const MessageList = ({
             behavior: "smooth",
         });
     }, [messages, loading, sending]);
-
-    /* =========================================================
-       HIGHLIGHT NEW MESSAGE
-    ========================================================= */
 
     useEffect(() => {
         if (loading) {
@@ -89,10 +81,6 @@ const MessageList = ({
             messages.length;
     }, [messages, loading]);
 
-    /* =========================================================
-       INITIAL CHAT LOADING
-    ========================================================= */
-
     if (loading) {
         return (
             <div
@@ -108,20 +96,12 @@ const MessageList = ({
         );
     }
 
-    /* =========================================================
-       MESSAGES
-    ========================================================= */
-
     return (
         <div
             className="message-list"
             ref={scrollerRef}
         >
             <div className="message-list-container">
-
-                {/* =========================
-                    CHAT MESSAGES
-                ========================= */}
 
                 {messages.map((message, index) => (
                     <Message
@@ -137,10 +117,6 @@ const MessageList = ({
                     />
                 ))}
 
-                {/* =========================
-                    AI TYPING INDICATOR
-                ========================= */}
-
                 {sending && (
                     <div className="typing-message">
                         <div className="typing-dots">
@@ -151,10 +127,6 @@ const MessageList = ({
                     </div>
                 )}
             </div>
-
-            {/* =========================
-                IMAGE MODAL
-            ========================= */}
 
             {zoomedImageUrl && (
                 <button

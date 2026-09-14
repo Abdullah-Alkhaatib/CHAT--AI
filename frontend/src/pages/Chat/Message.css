@@ -1,20 +1,9 @@
-/* =========================================================
-   MESSAGE
-========================================================= */
-
 .message {
     width: 100%;
     max-width: 100%;
-
     margin-bottom: 28px;
-
     box-sizing: border-box;
 }
-
-
-/* =========================================================
-   USER MESSAGE
-========================================================= */
 
 .message-user {
     display: flex;
@@ -25,32 +14,17 @@
 .user-content {
     width: fit-content;
     max-width: min(760px, 85%);
-
     padding: 12px 16px;
-
     background: #2b2f36;
-
     border: 1px solid #3b4450;
-
     border-radius: 18px;
-
     color: #eeeeee;
-
     font-size: 15px;
-
     line-height: 1.65;
-
     text-align: start;
-
     overflow-wrap: anywhere;
-
     box-sizing: border-box;
 }
-
-
-/* =========================================================
-   USER MARKDOWN
-========================================================= */
 
 .user-content .markdown-paragraph {
     margin: 0 0 12px;
@@ -72,41 +46,22 @@
     margin-top: 0;
 }
 
-
-/* =========================================================
-   ASSISTANT MESSAGE
-========================================================= */
-
 .message-assistant {
     width: 100%;
-
     background: transparent;
-
     border: none;
-
     margin-right: 0;
-
     padding: 0;
 }
 
 .assistant-content {
     width: 100%;
-
     color: #e5e5e5;
-
     font-size: 15px;
-
     line-height: 1.75;
-
     text-align: start;
-
     overflow-wrap: anywhere;
 }
-
-
-/* =========================================================
-   PARAGRAPHS
-========================================================= */
 
 .markdown-paragraph {
     margin: 0 0 18px;
@@ -116,16 +71,9 @@
     margin-bottom: 0;
 }
 
-
-/* =========================================================
-   HEADINGS
-========================================================= */
-
 .markdown-heading {
     color: #f1f1f1;
-
     margin: 24px 0 12px;
-
     line-height: 1.4;
 }
 
@@ -133,14 +81,8 @@
     margin-top: 0;
 }
 
-
-/* =========================================================
-   LISTS
-========================================================= */
-
 .markdown-list {
     margin: 10px 0 18px;
-
     padding-inline-start: 24px;
 }
 
@@ -148,131 +90,68 @@
     margin-bottom: 6px;
 }
 
-
-/* =========================================================
-   INLINE CODE
-========================================================= */
-
 .inline-code {
     direction: ltr;
-
     display: inline;
-
     background: #2a2a2a;
-
     border: 1px solid #3b3b3b;
-
     color: #f0f0f0;
-
     padding: 2px 6px;
-
     border-radius: 5px;
-
     font-family:
         "Consolas",
         "Monaco",
         "Courier New",
         monospace;
-
     font-size: 0.9em;
-
     white-space: pre-wrap;
-
     unicode-bidi: isolate;
 }
 
-
-/* =========================================================
-   CODE BLOCK
-========================================================= */
-
 .code-block {
     width: 100%;
-
     margin: 20px 0 24px;
-
     padding: 0;
-
     background: #0f0f0f;
-
     border: 1px solid #343434;
-
     border-radius: 12px;
-
     overflow: hidden;
-
     direction: ltr;
-
     text-align: left;
-
     box-sizing: border-box;
 }
-
-
-/* =========================================================
-   CODE HEADER
-========================================================= */
 
 .code-header {
     height: 46px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     padding: 0 12px;
-
     background: #181818;
-
     border-bottom: 1px solid #343434;
-
     box-sizing: border-box;
 }
 
-
-/* =========================================================
-   CODE LANGUAGE
-========================================================= */
-
 .code-language {
     color: #bdbdbd;
-
     font-family:
         "Consolas",
         "Monaco",
         monospace;
-
     font-size: 12px;
-
     font-weight: 600;
-
     letter-spacing: 0.3px;
 }
 
-
-/* =========================================================
-   CODE COPY BUTTON
-========================================================= */
-
 .code-copy-button {
     border: 1px solid #4a4a4a;
-
     border-radius: 7px;
-
     background: #252525;
-
     color: #e7e7e7;
-
     font-size: 12px;
-
     font-weight: 600;
-
     padding: 6px 11px;
-
     cursor: pointer;
-
     transition:
         background-color 0.2s ease,
         border-color 0.2s ease,
@@ -281,7 +160,6 @@
 
 .code-copy-button:hover {
     background: #333333;
-
     border-color: #666666;
 }
 
@@ -289,97 +167,51 @@
     transform: scale(0.96);
 }
 
-
-/* =========================================================
-   CODE CONTENT
-========================================================= */
-
 .code-pre {
     width: 100%;
-
     margin: 0;
-
     padding: 18px 20px;
-
     box-sizing: border-box;
-
     overflow-x: auto;
-
     background: #0f0f0f;
-
     direction: ltr;
-
     text-align: left;
-
     -webkit-overflow-scrolling: touch;
 }
 
-
-/* =========================================================
-   CODE TEXT
-========================================================= */
-
 .code-pre code {
     display: block;
-
     color: #e6e6e6;
-
     font-family:
         "Consolas",
         "Monaco",
         "Courier New",
         monospace;
-
     font-size: 13px;
-
     line-height: 1.65;
-
-    white-space: pre-wrap; /* تم التعديل هنا لتنزيل الأسطر الطويلة تلقائياً */
-    word-break: break-word; /* كسر الكلمات الطويلة لعدم الخروج عن الحدود */
+    white-space: pre-wrap;
+    word-break: break-word;
     overflow-wrap: break-word;
-
     direction: ltr;
-
     text-align: left;
-
     unicode-bidi: isolate;
-
     tab-size: 4;
 }
 
-
-/* =========================================================
-   MESSAGE ACTIONS
-========================================================= */
-
 .message-actions {
     display: flex;
-
     justify-content: flex-start;
-
     margin-top: 8px;
 }
 
-
-/* =========================================================
-   MESSAGE COPY BUTTON
-========================================================= */
-
 .message-copy-button {
     border: none;
-
     background: transparent;
-
     color: #8f8f8f;
-
     font-size: 12px;
-
     padding: 5px 8px;
-
     border-radius: 6px;
-
     cursor: pointer;
-
     transition:
         background-color 0.2s ease,
         color 0.2s ease;
@@ -387,45 +219,25 @@
 
 .message-copy-button:hover {
     background: #2a2a2a;
-
     color: #dddddd;
 }
 
-
-/* =========================================================
-   IMAGES
-========================================================= */
-
 .message-images {
     display: flex;
-
     flex-wrap: wrap;
-
     gap: 8px;
-
     margin-bottom: 12px;
 }
 
 .message-image {
     display: block;
-
     width: 88px;
-
     height: 88px;
-
     object-fit: cover;
-
     border-radius: 10px;
-
     cursor: zoom-in;
-
     border: 1px solid rgba(255, 255, 255, 0.12);
 }
-
-
-/* =========================================================
-   NEW MESSAGE
-========================================================= */
 
 .message-new {
     animation: message-pop 0.35s ease;
@@ -434,26 +246,14 @@
 @keyframes message-pop {
     0% {
         transform: translateY(8px);
-
         opacity: 0.4;
     }
 
     100% {
         transform: translateY(0);
-
         opacity: 1;
     }
 }
-
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-
-/* =========================================================
-   TABLET
-========================================================= */
 
 @media (max-width: 900px) {
     .message {
@@ -466,21 +266,17 @@
 
     .assistant-content {
         font-size: 15px;
-
         line-height: 1.7;
     }
 
     .code-block {
         margin-top: 16px;
-
         margin-bottom: 20px;
-
         border-radius: 10px;
     }
 
     .code-header {
         height: 44px;
-
         padding: 0 10px;
     }
 
@@ -490,79 +286,39 @@
 
     .code-pre code {
         font-size: 12.5px;
-
         line-height: 1.6;
     }
 }
 
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
 @media (max-width: 600px) {
     .message {
         width: 100%;
-
         max-width: 100%;
-
         margin-bottom: 20px;
     }
 
-
-    /* -----------------------------------------
-       USER MESSAGE
-    ----------------------------------------- */
-
     .user-content {
         max-width: 88%;
-
         padding: 10px 13px;
-
         border-radius: 16px;
-
         font-size: 14px;
-
         line-height: 1.55;
     }
 
-
-    /* -----------------------------------------
-       AI MESSAGE
-    ----------------------------------------- */
-
     .assistant-content {
         width: 100%;
-
         font-size: 14px;
-
         line-height: 1.65;
     }
-
-
-    /* -----------------------------------------
-       PARAGRAPHS
-    ----------------------------------------- */
 
     .markdown-paragraph {
         margin-bottom: 15px;
     }
 
-
-    /* -----------------------------------------
-       HEADINGS
-    ----------------------------------------- */
-
     .markdown-heading {
         margin-top: 20px;
-
         margin-bottom: 10px;
     }
-
-
-    /* -----------------------------------------
-       INLINE CODE
-    ----------------------------------------- */
 
     .inline-code {
         font-size: 12px;
@@ -570,27 +326,14 @@
         padding: 2px 5px;
     }
 
-
-    /* -----------------------------------------
-       CODE BLOCK
-    ----------------------------------------- */
-
     .code-block {
         width: 100%;
-
         margin: 16px 0 20px;
-
         border-radius: 9px;
     }
 
-
-    /* -----------------------------------------
-       CODE HEADER
-    ----------------------------------------- */
-
     .code-header {
         height: 42px;
-
         padding: 0 9px;
     }
 
@@ -600,41 +343,24 @@
 
     .code-copy-button {
         font-size: 11px;
-
         padding: 5px 9px;
     }
 
-
-    /* -----------------------------------------
-       CODE CONTENT
-    ----------------------------------------- */
-
     .code-pre {
         width: 100%;
-
         padding: 13px;
-
         overflow-x: auto;
-
         -webkit-overflow-scrolling: touch;
     }
 
     .code-pre code {
         min-width: max-content;
-
         font-size: 12px;
-
         line-height: 1.55;
     }
 
-
-    /* -----------------------------------------
-       LISTS
-    ----------------------------------------- */
-
     .markdown-list {
         padding-inline-start: 20px;
-
         margin-bottom: 14px;
     }
 
@@ -642,44 +368,24 @@
         margin-bottom: 5px;
     }
 
-
-    /* -----------------------------------------
-       IMAGES
-    ----------------------------------------- */
-
     .message-images {
         gap: 6px;
     }
-
     .message-image {
         width: 76px;
-
         height: 76px;
-
         border-radius: 9px;
     }
 
-
-    /* -----------------------------------------
-       COPY MESSAGE
-    ----------------------------------------- */
-
     .message-copy-button {
         font-size: 11px;
-
         padding: 4px 7px;
     }
 }
 
-
-/* =========================================================
-   SMALL PHONES
-========================================================= */
-
 @media (max-width: 400px) {
     .user-content {
         max-width: 92%;
-
         padding: 9px 12px;
     }
 

@@ -103,24 +103,20 @@ export const AuthProvider = ({
     };
 
     // ==========================================
-    // Logout (تم التعديل هنا لتنظيف كلشي)
+    // Logout
     // ==========================================
 
     const logout = () => {
-        // 1. حذف التوكنز واليوزر الأساسيين
         localStorage.removeItem("user");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
 
-        // 2. حذف بيانات الشات المخزنة محلياً عشان ما تضل ظاهرة للمستخدم التالي
-        // بنمر على كل مفاتيح الـ localStorage وبنحذف اللي بيتعلق بالشات
         Object.keys(localStorage).forEach((key) => {
             if (key.startsWith("chat-active-id") || key.startsWith("chat-sessions")) {
                 localStorage.removeItem(key);
             }
         });
 
-        // 3. تصفير الـ States
         setUser(null);
         setAccessToken(null);
     };

@@ -7,18 +7,15 @@ export default function Home() {
     const [message, setMessage] = useState("");
     const [showAuthModal, setShowAuthModal] = useState(false);
 
-    // محاكاة لإرسال رسالة من قبل زائر غير مسجل
     const handleSend = (e: React.FormEvent) => {
         e.preventDefault();
         if (!message.trim()) return;
         
-        // إظهار نافذة تسجيل الدخول إذا حاول الكتابة
         setShowAuthModal(true);
     };
 
     return (
         <div className="home-chat-container">
-            {/* محاكاة للشات الحقيقي */}
             <aside className="home-sidebar">
                 <div className="home-sidebar-top">
                     <h2>AI Chat</h2>
@@ -52,7 +49,6 @@ export default function Home() {
                         <p>Chat with an intelligent assistant, upload images, and explore features.</p>
                     </div>
 
-                    {/* شريط الإدخال الوهمي */}
                     <form onSubmit={handleSend} className="home-input-form">
                         <input
                             type="text"
@@ -70,7 +66,6 @@ export default function Home() {
                 </div>
             </main>
 
-            {/* نافذة تنبيه لتسجيل الدخول إذا حاول التفاعل */}
             {showAuthModal && (
                 <div className="home-modal-overlay">
                     <div className="home-modal">

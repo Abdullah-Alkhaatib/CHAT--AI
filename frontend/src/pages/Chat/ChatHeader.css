@@ -12,8 +12,8 @@
 .chat-header-left {
     display: flex;
     align-items: center;
-    min-width: 0; /* مهم جداً لمنع خروج النص عن الحاوية */
-    gap: 12px; /* مسافة بين العناصر لو أضفت زر رجوع مثلاً */
+    min-width: 0;
+    gap: 12px;
 }
 
 .chat-header-title {
@@ -21,8 +21,6 @@
     color: #ffffff;
     font-size: 16px;
     font-weight: 500;
-    
-    /* خصائص لقص النص الطويل وضمان عدم انكسار التنسيق */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -31,7 +29,7 @@
 .chat-header-right {
     display: flex;
     align-items: center;
-    gap: 4px; /* مسافة بين الأزرار لو فيه أكثر من زر */
+    gap: 4px;
 }
 
 .chat-header-action {
@@ -54,20 +52,19 @@
     color: #ffffff;
 }
 
-/* ================= طابع التجاوب (Responsive) ================= */
 @media screen and (max-width: 480px) {
     .chat-header {
-        height: 54px; /* تقليل الارتفاع قليلأً للهواتف */
-        padding: 0 12px; /* تقليل الهوامش الجانبية */
+        height: 54px;
+        padding: 0 12px;
     }
 
     .chat-header-title {
-        font-size: 15px; /* تصغير حجم الخط قليلاً على الموبايل */
+        font-size: 15px;
     }
 
     .chat-header-action {
         width: 32px;
         height: 32px;
-        font-size: 18px; /* تصغير حجم أيقونة الزر قليلاً */
+        font-size: 18px;
     }
 }

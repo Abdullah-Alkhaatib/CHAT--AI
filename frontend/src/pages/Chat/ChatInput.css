@@ -64,10 +64,6 @@
     z-index: 1;
 }
 
-/* =========================
-   CHAT INPUT
-========================= */
-
 .chat-input-container {
     width: 100%;
     max-width: 900px;
@@ -126,7 +122,6 @@
     color: #888888;
 }
 
-/* Chrome / Edge scrollbar */
 .chat-input::-webkit-scrollbar {
     width: 7px;
 }
@@ -143,10 +138,6 @@
 .chat-input::-webkit-scrollbar-thumb:hover {
     background-color: #888888;
 }
-
-/* =========================
-   BUTTONS
-========================= */
 
 .chat-input-attach-button,
 .chat-input-send-button {
@@ -196,10 +187,6 @@
     opacity: 0.5;
 }
 
-/* =========================
-   STOP BUTTON (أيقونة وحالة الإيقاف)
-========================= */
-
 .chat-input-send-button.is-sending {
     background-color: #ffffff !important;
     cursor: pointer !important;
@@ -210,7 +197,6 @@
     background-color: #dcdcdc !important;
 }
 
-/* شكل مربع الإيقاف الصغير داخل الزر */
 .chat-input-stop-icon {
     width: 12px;
     height: 12px;
@@ -223,10 +209,6 @@
 .chat-input-send-button.is-sending:active .chat-input-stop-icon {
     transform: scale(0.85);
 }
-
-/* =========================
-   INFO
-========================= */
 
 .chat-input-selected-images {
     width: 100%;
@@ -250,32 +232,29 @@
     text-align: center;
 }
 
-/* =========================================
-   RESPONSIVE (التجاوب مع الشاشات الصغيرة)
-========================================= */
 @media screen and (max-width: 600px) {
     .chat-input-wrapper {
-        padding: 12px 12px 10px; /* تقليص الهوامش الجانبية للاستفادة من مساحة الموبايل */
+        padding: 12px 12px 10px;
     }
 
     .chat-input-preview-item {
-        width: 60px;  /* تصغير أبعاد الصور المعاينة قليلاً */
+        width: 60px;
         height: 60px;
     }
 
     .chat-input {
-        font-size: 14px; /* تصغير خط الكتابة قليلاً لمنع التضارب */
+        font-size: 14px;
         padding: 7px 6px;
     }
 
     .chat-input-attach-button,
     .chat-input-send-button {
-        width: 36px;  /* تصغير الأزرار مساحة بسيطة لتلائم الهواتف */
+        width: 36px;
         height: 36px;
         font-size: 18px;
     }
 
     .chat-input-disclaimer {
-        font-size: 10px; /* تصغير نص التحذير بالأسفل ليظهر بشكل أنظف */
+        font-size: 10px;
     }
 }

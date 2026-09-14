@@ -14,7 +14,7 @@ interface ChatInputProps {
         prompt: string,
         images: File[]
     ) => void;
-    onStop?: () => void; // دالة إيقاف الطلب
+    onStop?: () => void;
     sending: boolean;
 }
 
@@ -282,7 +282,7 @@ const ChatInput = ({
                     onClick={(e) => {
                         if (sending && onStop) {
                             e.preventDefault();
-                            onStop(); // استدعاء دالة الإيقاف عند النقر
+                            onStop();
                         }
                     }}
                     disabled={

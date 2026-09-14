@@ -17,10 +17,6 @@ interface CodeBlockProps {
     children?: React.ReactNode;
 }
 
-/* =========================================================
-   CODE BLOCK
-========================================================= */
-
 const CodeBlock = ({
     className,
     children,
@@ -54,9 +50,6 @@ const CodeBlock = ({
 
     return (
         <div className="code-block">
-            {/* =================================================
-                CODE HEADER
-            ================================================= */}
 
             <div className="code-header">
                 <span className="code-language">
@@ -72,10 +65,6 @@ const CodeBlock = ({
                 </button>
             </div>
 
-            {/* =================================================
-                CODE
-            ================================================= */}
-
             <pre className="code-pre">
                 <code className={className}>
                     {code}
@@ -85,20 +74,12 @@ const CodeBlock = ({
     );
 };
 
-/* =========================================================
-   MESSAGE
-========================================================= */
-
 const Message = ({
     message,
     isNew,
     onImageClick,
 }: MessageProps) => {
     const [copied, setCopied] = useState(false);
-
-    /* =======================================================
-       COPY ENTIRE MESSAGE
-    ======================================================= */
 
     const handleCopyMessage = async () => {
         if (!message.content?.trim()) {
@@ -131,15 +112,9 @@ const Message = ({
                     : "message-assistant"
             } ${isNew ? "message-new" : ""}`}
         >
-            {/* =================================================
-                USER MESSAGE
-            ================================================= */}
 
             {message.role === "user" && (
                 <>
-                    {/* =========================================
-                        USER IMAGES
-                    ========================================= */}
 
                     {message.images &&
                         message.images.length > 0 && (
@@ -164,10 +139,6 @@ const Message = ({
                             </div>
                         )}
 
-                    {/* =========================================
-                        USER CONTENT
-                    ========================================= */}
-
                     {message.content && (
                         <div
                             className="message-content user-content"
@@ -178,9 +149,6 @@ const Message = ({
                                     remarkGfm,
                                 ]}
                                 components={{
-                                    /* ---------------------------------
-                                       INLINE / BLOCK CODE
-                                    --------------------------------- */
 
                                     code: ({
                                         className,
@@ -191,10 +159,6 @@ const Message = ({
                                             Boolean(
                                                 className
                                             );
-
-                                        /* -----------------------------
-                                           INLINE CODE
-                                        ----------------------------- */
 
                                         if (
                                             !isCodeBlock
@@ -209,10 +173,6 @@ const Message = ({
                                             );
                                         }
 
-                                        /* -----------------------------
-                                           CODE BLOCK
-                                        ----------------------------- */
-
                                         return (
                                             <CodeBlock
                                                 className={
@@ -224,10 +184,6 @@ const Message = ({
                                         );
                                     },
 
-                                    /* ---------------------------------
-                                       PARAGRAPH
-                                    --------------------------------- */
-
                                     p: ({
                                         children,
                                     }) => (
@@ -235,10 +191,6 @@ const Message = ({
                                             {children}
                                         </p>
                                     ),
-
-                                    /* ---------------------------------
-                                       HEADINGS
-                                    --------------------------------- */
 
                                     h1: ({
                                         children,
@@ -263,10 +215,6 @@ const Message = ({
                                             {children}
                                         </h3>
                                     ),
-
-                                    /* ---------------------------------
-                                       LISTS
-                                    --------------------------------- */
 
                                     ul: ({
                                         children,
@@ -300,15 +248,8 @@ const Message = ({
                 </>
             )}
 
-            {/* =================================================
-                ASSISTANT MESSAGE
-            ================================================= */}
-
             {message.role === "assistant" && (
                 <>
-                    {/* =========================================
-                        ASSISTANT IMAGES
-                    ========================================= */}
 
                     {message.images &&
                         message.images.length > 0 && (
@@ -333,10 +274,6 @@ const Message = ({
                             </div>
                         )}
 
-                    {/* =========================================
-                        ASSISTANT CONTENT
-                    ========================================= */}
-
                     {message.content && (
                         <div
                             className="assistant-content"
@@ -347,9 +284,6 @@ const Message = ({
                                     remarkGfm,
                                 ]}
                                 components={{
-                                    /* ---------------------------------
-                                       INLINE / BLOCK CODE
-                                    --------------------------------- */
 
                                     code: ({
                                         className,
@@ -360,10 +294,6 @@ const Message = ({
                                             Boolean(
                                                 className
                                             );
-
-                                        /* -----------------------------
-                                           INLINE CODE
-                                        ----------------------------- */
 
                                         if (
                                             !isCodeBlock
@@ -378,10 +308,6 @@ const Message = ({
                                             );
                                         }
 
-                                        /* -----------------------------
-                                           CODE BLOCK
-                                        ----------------------------- */
-
                                         return (
                                             <CodeBlock
                                                 className={
@@ -393,10 +319,6 @@ const Message = ({
                                         );
                                     },
 
-                                    /* ---------------------------------
-                                       PARAGRAPH
-                                    --------------------------------- */
-
                                     p: ({
                                         children,
                                     }) => (
@@ -404,10 +326,6 @@ const Message = ({
                                             {children}
                                         </p>
                                     ),
-
-                                    /* ---------------------------------
-                                       HEADINGS
-                                    --------------------------------- */
 
                                     h1: ({
                                         children,
@@ -432,10 +350,6 @@ const Message = ({
                                             {children}
                                         </h3>
                                     ),
-
-                                    /* ---------------------------------
-                                       LISTS
-                                    --------------------------------- */
 
                                     ul: ({
                                         children,
@@ -464,10 +378,6 @@ const Message = ({
                             >
                                 {message.content}
                             </ReactMarkdown>
-
-                            {/* =====================================
-                                COPY ENTIRE AI RESPONSE
-                            ===================================== */}
 
                             <div className="message-actions">
                                 <button
