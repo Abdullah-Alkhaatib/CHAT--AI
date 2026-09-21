@@ -7,25 +7,9 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://chatabd.netlify.app',
-    process.env.CLIENT_URL,
-].filter((origin): origin is string => Boolean(origin));
-
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-            return;
-        }
-
-        callback(new Error('Not allowed by CORS'));
-    },
+    origin: process.env.CLIENT_URL,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use(express.json());
